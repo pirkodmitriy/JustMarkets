@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>831405590505-8b0thllaofil27tsdk5q3m281k1akj8c.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.831405590505-8b0thllaofil27tsdk5q3m281k1akj8c</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>831405590505-8ooteebrevjsest5cflk324m5gua83mh.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyApu8SSnwcmeeWqhFa2J7gAkqoTufvpAKE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>831405590505</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.EugeneFX.Justforex</string>
+	<key>PROJECT_ID</key>
+	<string>justforex-2ca2f</string>
+	<key>STORAGE_BUCKET</key>
+	<string>justforex-2ca2f.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:831405590505:ios:a2b233af6ebec645acad78</string>
+	<key>DATABASE_URL</key>
+	<string>https://justforex-2ca2f.firebaseio.com</string>
+</dict>
+</plist>

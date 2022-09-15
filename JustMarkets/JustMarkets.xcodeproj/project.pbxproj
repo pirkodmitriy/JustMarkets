@@ -1,0 +1,614 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		514F67EC28D116E7003C51ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514F67EB28D116E7003C51ED /* AppDelegate.swift */; };
+		514F67F028D116E7003C51ED /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514F67EF28D116E7003C51ED /* LoginViewController.swift */; };
+		514F67F328D116E7003C51ED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 514F67F128D116E7003C51ED /* Main.storyboard */; };
+		514F67F628D116E7003C51ED /* JustMarkets.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 514F67F428D116E7003C51ED /* JustMarkets.xcdatamodeld */; };
+		514F67F828D116E9003C51ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 514F67F728D116E9003C51ED /* Assets.xcassets */; };
+		514F67FB28D116E9003C51ED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 514F67F928D116E9003C51ED /* LaunchScreen.storyboard */; };
+		514F680428D11BE0003C51ED /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 514F680328D11BE0003C51ED /* OpenSans-Regular.ttf */; };
+		51FCF08828D270C600F09524 /* OneSignal in Frameworks */ = {isa = PBXBuildFile; productRef = 51FCF08728D270C600F09524 /* OneSignal */; };
+		51FCF08A28D270C600F09524 /* OneSignalExtension in Frameworks */ = {isa = PBXBuildFile; productRef = 51FCF08928D270C600F09524 /* OneSignalExtension */; };
+		51FCF09228D270D900F09524 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FCF09128D270D900F09524 /* NotificationService.swift */; };
+		51FCF09628D270D900F09524 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 51FCF08F28D270D900F09524 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		51FCF0AB28D3808600F09524 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 51FCF0AA28D3808600F09524 /* GoogleService-Info.plist */; };
+		51FCF0AD28D380D000F09524 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FCF0AC28D380D000F09524 /* NetworkManager.swift */; };
+		51FCF0B528D3916300F09524 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 51FCF0B428D3916300F09524 /* FirebaseRemoteConfig */; };
+		51FCF0B728D3D54000F09524 /* Rechability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FCF0B628D3D54000F09524 /* Rechability.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		51FCF09428D270D900F09524 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 514F67E028D116E7003C51ED /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 51FCF08E28D270D900F09524;
+			remoteInfo = OneSignalNotificationServiceExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		51FCF09A28D270D900F09524 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				51FCF09628D270D900F09524 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		514F67E828D116E7003C51ED /* JustMarkets.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JustMarkets.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		514F67EB28D116E7003C51ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		514F67EF28D116E7003C51ED /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		514F67F228D116E7003C51ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		514F67F528D116E7003C51ED /* JustMarkets.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = JustMarkets.xcdatamodel; sourceTree = "<group>"; };
+		514F67F728D116E9003C51ED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		514F67FA28D116E9003C51ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		514F67FC28D116E9003C51ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		514F680328D11BE0003C51ED /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
+		51FCF08F28D270D900F09524 /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		51FCF09128D270D900F09524 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		51FCF09328D270D900F09524 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		51FCF09B28D2713400F09524 /* JustMarkets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JustMarkets.entitlements; sourceTree = "<group>"; };
+		51FCF0AA28D3808600F09524 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		51FCF0AC28D380D000F09524 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		51FCF0B628D3D54000F09524 /* Rechability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rechability.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		514F67E528D116E7003C51ED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				51FCF0B528D3916300F09524 /* FirebaseRemoteConfig in Frameworks */,
+				51FCF08828D270C600F09524 /* OneSignal in Frameworks */,
+				51FCF08A28D270C600F09524 /* OneSignalExtension in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		51FCF08C28D270D900F09524 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		514F67DF28D116E7003C51ED = {
+			isa = PBXGroup;
+			children = (
+				514F67EA28D116E7003C51ED /* JustMarkets */,
+				51FCF09028D270D900F09524 /* OneSignalNotificationServiceExtension */,
+				514F67E928D116E7003C51ED /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		514F67E928D116E7003C51ED /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				514F67E828D116E7003C51ED /* JustMarkets.app */,
+				51FCF08F28D270D900F09524 /* OneSignalNotificationServiceExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		514F67EA28D116E7003C51ED /* JustMarkets */ = {
+			isa = PBXGroup;
+			children = (
+				51FCF09B28D2713400F09524 /* JustMarkets.entitlements */,
+				514F67EB28D116E7003C51ED /* AppDelegate.swift */,
+				51FCF0AC28D380D000F09524 /* NetworkManager.swift */,
+				51FCF0B628D3D54000F09524 /* Rechability.swift */,
+				514F67EF28D116E7003C51ED /* LoginViewController.swift */,
+				514F67F128D116E7003C51ED /* Main.storyboard */,
+				514F67F728D116E9003C51ED /* Assets.xcassets */,
+				514F680228D11B98003C51ED /* Recources */,
+				514F67F928D116E9003C51ED /* LaunchScreen.storyboard */,
+				514F67FC28D116E9003C51ED /* Info.plist */,
+				51FCF0AA28D3808600F09524 /* GoogleService-Info.plist */,
+				514F67F428D116E7003C51ED /* JustMarkets.xcdatamodeld */,
+			);
+			path = JustMarkets;
+			sourceTree = "<group>";
+		};
+		514F680228D11B98003C51ED /* Recources */ = {
+			isa = PBXGroup;
+			children = (
+				514F680328D11BE0003C51ED /* OpenSans-Regular.ttf */,
+			);
+			path = Recources;
+			sourceTree = "<group>";
+		};
+		51FCF09028D270D900F09524 /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXGroup;
+			children = (
+				51FCF09128D270D900F09524 /* NotificationService.swift */,
+				51FCF09328D270D900F09524 /* Info.plist */,
+			);
+			path = OneSignalNotificationServiceExtension;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		514F67E728D116E7003C51ED /* JustMarkets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 514F67FF28D116E9003C51ED /* Build configuration list for PBXNativeTarget "JustMarkets" */;
+			buildPhases = (
+				514F67E428D116E7003C51ED /* Sources */,
+				514F67E528D116E7003C51ED /* Frameworks */,
+				514F67E628D116E7003C51ED /* Resources */,
+				51FCF09A28D270D900F09524 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				51FCF09528D270D900F09524 /* PBXTargetDependency */,
+			);
+			name = JustMarkets;
+			packageProductDependencies = (
+				51FCF08728D270C600F09524 /* OneSignal */,
+				51FCF08928D270C600F09524 /* OneSignalExtension */,
+				51FCF0B428D3916300F09524 /* FirebaseRemoteConfig */,
+			);
+			productName = JustMarkets;
+			productReference = 514F67E828D116E7003C51ED /* JustMarkets.app */;
+			productType = "com.apple.product-type.application";
+		};
+		51FCF08E28D270D900F09524 /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 51FCF09728D270D900F09524 /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
+			buildPhases = (
+				51FCF08B28D270D900F09524 /* Sources */,
+				51FCF08C28D270D900F09524 /* Frameworks */,
+				51FCF08D28D270D900F09524 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OneSignalNotificationServiceExtension;
+			productName = OneSignalNotificationServiceExtension;
+			productReference = 51FCF08F28D270D900F09524 /* OneSignalNotificationServiceExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		514F67E028D116E7003C51ED /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1320;
+				LastUpgradeCheck = 1320;
+				TargetAttributes = {
+					514F67E728D116E7003C51ED = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+					51FCF08E28D270D900F09524 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+				};
+			};
+			buildConfigurationList = 514F67E328D116E7003C51ED /* Build configuration list for PBXProject "JustMarkets" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 514F67DF28D116E7003C51ED;
+			packageReferences = (
+				51FCF08628D270C600F09524 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */,
+				51FCF0B328D3916300F09524 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
+			productRefGroup = 514F67E928D116E7003C51ED /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				514F67E728D116E7003C51ED /* JustMarkets */,
+				51FCF08E28D270D900F09524 /* OneSignalNotificationServiceExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		514F67E628D116E7003C51ED /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				514F67FB28D116E9003C51ED /* LaunchScreen.storyboard in Resources */,
+				514F67F828D116E9003C51ED /* Assets.xcassets in Resources */,
+				51FCF0AB28D3808600F09524 /* GoogleService-Info.plist in Resources */,
+				514F680428D11BE0003C51ED /* OpenSans-Regular.ttf in Resources */,
+				514F67F328D116E7003C51ED /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		51FCF08D28D270D900F09524 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		514F67E428D116E7003C51ED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				51FCF0AD28D380D000F09524 /* NetworkManager.swift in Sources */,
+				51FCF0B728D3D54000F09524 /* Rechability.swift in Sources */,
+				514F67F028D116E7003C51ED /* LoginViewController.swift in Sources */,
+				514F67F628D116E7003C51ED /* JustMarkets.xcdatamodeld in Sources */,
+				514F67EC28D116E7003C51ED /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		51FCF08B28D270D900F09524 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				51FCF09228D270D900F09524 /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		51FCF09528D270D900F09524 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 51FCF08E28D270D900F09524 /* OneSignalNotificationServiceExtension */;
+			targetProxy = 51FCF09428D270D900F09524 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		514F67F128D116E7003C51ED /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				514F67F228D116E7003C51ED /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		514F67F928D116E9003C51ED /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				514F67FA28D116E9003C51ED /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		514F67FD28D116E9003C51ED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		514F67FE28D116E9003C51ED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		514F680028D116E9003C51ED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = JustMarkets/JustMarkets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = JustMarkets/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.EugeneFX.Justforex;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		514F680128D116E9003C51ED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = JustMarkets/JustMarkets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = JustMarkets/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.EugeneFX.Justforex;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		51FCF09828D270D900F09524 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OneSignalNotificationServiceExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.EugeneFX.Justforex.OneSignalNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		51FCF09928D270D900F09524 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OneSignalNotificationServiceExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.EugeneFX.Justforex.OneSignalNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		514F67E328D116E7003C51ED /* Build configuration list for PBXProject "JustMarkets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				514F67FD28D116E9003C51ED /* Debug */,
+				514F67FE28D116E9003C51ED /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		514F67FF28D116E9003C51ED /* Build configuration list for PBXNativeTarget "JustMarkets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				514F680028D116E9003C51ED /* Debug */,
+				514F680128D116E9003C51ED /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		51FCF09728D270D900F09524 /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				51FCF09828D270D900F09524 /* Debug */,
+				51FCF09928D270D900F09524 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		51FCF08628D270C600F09524 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/OneSignal/OneSignal-XCFramework";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+		51FCF0B328D3916300F09524 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		51FCF08728D270C600F09524 /* OneSignal */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 51FCF08628D270C600F09524 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */;
+			productName = OneSignal;
+		};
+		51FCF08928D270C600F09524 /* OneSignalExtension */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 51FCF08628D270C600F09524 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */;
+			productName = OneSignalExtension;
+		};
+		51FCF0B428D3916300F09524 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 51FCF0B328D3916300F09524 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
+		};
+/* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		514F67F428D116E7003C51ED /* JustMarkets.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				514F67F528D116E7003C51ED /* JustMarkets.xcdatamodel */,
+			);
+			currentVersion = 514F67F528D116E7003C51ED /* JustMarkets.xcdatamodel */;
+			path = JustMarkets.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 514F67E028D116E7003C51ED /* Project object */;
+}

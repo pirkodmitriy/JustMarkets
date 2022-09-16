@@ -18,7 +18,8 @@ class NetworkManager {
     
     private func setupRemoteConfigDefaults() {
         let defaultsValues = [
-            "base_urls" : "[{\"DEV\":[\"https://ios.justforex.net/\"],\"STABLE\":[\"https://ios.justforex.net/\"],\"PROD\":[\"https://ios.justforex.net/\"]}]" as NSObject
+            "base_urls" : "[{\"DEV\":[\"https://justmarkets.com/\",\"https://iosjmdev9.justforex.net/\",\"https://justmarkets.com/\"],\"STABLE\":[\"https://ios.justforex.net/\"],\"PROD\":[\"https://ios.justforex.net/\"]}]" as NSObject,
+            "forExternalOpens": "[{\"justmarkets.com\",\"justmarkets.biz\",\"justmarkets.asia\"}]" as NSObject
         ]
         RemoteConfig.remoteConfig().setDefaults(defaultsValues)
     }

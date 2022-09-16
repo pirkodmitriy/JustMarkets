@@ -21,7 +21,6 @@
 		51FCF0AB28D3808600F09524 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 51FCF0AA28D3808600F09524 /* GoogleService-Info.plist */; };
 		51FCF0AD28D380D000F09524 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FCF0AC28D380D000F09524 /* NetworkManager.swift */; };
 		51FCF0B528D3916300F09524 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 51FCF0B428D3916300F09524 /* FirebaseRemoteConfig */; };
-		51FCF0B728D3D54000F09524 /* Rechability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FCF0B628D3D54000F09524 /* Rechability.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,7 +63,6 @@
 		51FCF09B28D2713400F09524 /* JustMarkets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JustMarkets.entitlements; sourceTree = "<group>"; };
 		51FCF0AA28D3808600F09524 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		51FCF0AC28D380D000F09524 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
-		51FCF0B628D3D54000F09524 /* Rechability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rechability.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,7 +110,6 @@
 				51FCF09B28D2713400F09524 /* JustMarkets.entitlements */,
 				514F67EB28D116E7003C51ED /* AppDelegate.swift */,
 				51FCF0AC28D380D000F09524 /* NetworkManager.swift */,
-				51FCF0B628D3D54000F09524 /* Rechability.swift */,
 				514F67EF28D116E7003C51ED /* LoginViewController.swift */,
 				514F67F128D116E7003C51ED /* Main.storyboard */,
 				514F67F728D116E9003C51ED /* Assets.xcassets */,
@@ -255,7 +252,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				51FCF0AD28D380D000F09524 /* NetworkManager.swift in Sources */,
-				51FCF0B728D3D54000F09524 /* Rechability.swift in Sources */,
 				514F67F028D116E7003C51ED /* LoginViewController.swift in Sources */,
 				514F67F628D116E7003C51ED /* JustMarkets.xcdatamodeld in Sources */,
 				514F67EC28D116E7003C51ED /* AppDelegate.swift in Sources */,

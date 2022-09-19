@@ -96,7 +96,7 @@
                         <outlet property="loginButton" destination="xjb-0A-sKE" id="nai-F6-11J"/>
                         <outlet property="logoImageView" destination="ifu-9C-Qcc" id="O6X-zC-Qz2"/>
                         <outlet property="registerButton" destination="Xyg-lP-xHx" id="Pl3-a1-1Zz"/>
-                        <outlet property="webView" destination="89Z-fD-UOn" id="W2e-ao-dfz"/>
+                        <outlet property="webView" destination="89Z-fD-UOn" id="oFR-eU-Oc8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ICG-2A-AqI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

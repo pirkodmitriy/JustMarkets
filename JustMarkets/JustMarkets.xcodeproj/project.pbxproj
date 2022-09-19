@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5109807328D7183000B703F4 /* WKWebViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5109807228D7183000B703F4 /* WKWebViewWrapper.swift */; };
 		514F67EC28D116E7003C51ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514F67EB28D116E7003C51ED /* AppDelegate.swift */; };
 		514F67F028D116E7003C51ED /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514F67EF28D116E7003C51ED /* LoginViewController.swift */; };
 		514F67F328D116E7003C51ED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 514F67F128D116E7003C51ED /* Main.storyboard */; };
@@ -14,13 +15,14 @@
 		514F67F828D116E9003C51ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 514F67F728D116E9003C51ED /* Assets.xcassets */; };
 		514F67FB28D116E9003C51ED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 514F67F928D116E9003C51ED /* LaunchScreen.storyboard */; };
 		514F680428D11BE0003C51ED /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 514F680328D11BE0003C51ED /* OpenSans-Regular.ttf */; };
-		51FCF08828D270C600F09524 /* OneSignal in Frameworks */ = {isa = PBXBuildFile; productRef = 51FCF08728D270C600F09524 /* OneSignal */; };
-		51FCF08A28D270C600F09524 /* OneSignalExtension in Frameworks */ = {isa = PBXBuildFile; productRef = 51FCF08928D270C600F09524 /* OneSignalExtension */; };
+		5177A6CE28D89594001DAE50 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 5177A6CD28D89594001DAE50 /* FirebaseAnalytics */; };
+		5177A6D028D89594001DAE50 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 5177A6CF28D89594001DAE50 /* FirebaseRemoteConfig */; };
+		5177A6D328D895E3001DAE50 /* OneSignal in Frameworks */ = {isa = PBXBuildFile; productRef = 5177A6D228D895E3001DAE50 /* OneSignal */; };
+		5177A6D628D8963B001DAE50 /* OneSignal in Frameworks */ = {isa = PBXBuildFile; productRef = 5177A6D528D8963B001DAE50 /* OneSignal */; };
 		51FCF09228D270D900F09524 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FCF09128D270D900F09524 /* NotificationService.swift */; };
 		51FCF09628D270D900F09524 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 51FCF08F28D270D900F09524 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		51FCF0AB28D3808600F09524 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 51FCF0AA28D3808600F09524 /* GoogleService-Info.plist */; };
 		51FCF0AD28D380D000F09524 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FCF0AC28D380D000F09524 /* NetworkManager.swift */; };
-		51FCF0B528D3916300F09524 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 51FCF0B428D3916300F09524 /* FirebaseRemoteConfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +50,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5109807228D7183000B703F4 /* WKWebViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WKWebViewWrapper.swift; sourceTree = "<group>"; };
 		514F67E828D116E7003C51ED /* JustMarkets.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JustMarkets.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		514F67EB28D116E7003C51ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		514F67EF28D116E7003C51ED /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -70,9 +73,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				51FCF0B528D3916300F09524 /* FirebaseRemoteConfig in Frameworks */,
-				51FCF08828D270C600F09524 /* OneSignal in Frameworks */,
-				51FCF08A28D270C600F09524 /* OneSignalExtension in Frameworks */,
+				5177A6CE28D89594001DAE50 /* FirebaseAnalytics in Frameworks */,
+				5177A6D028D89594001DAE50 /* FirebaseRemoteConfig in Frameworks */,
+				5177A6D328D895E3001DAE50 /* OneSignal in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,6 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5177A6D628D8963B001DAE50 /* OneSignal in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,6 +96,7 @@
 				514F67EA28D116E7003C51ED /* JustMarkets */,
 				51FCF09028D270D900F09524 /* OneSignalNotificationServiceExtension */,
 				514F67E928D116E7003C51ED /* Products */,
+				5177A6D428D8963B001DAE50 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -110,6 +115,7 @@
 				51FCF09B28D2713400F09524 /* JustMarkets.entitlements */,
 				514F67EB28D116E7003C51ED /* AppDelegate.swift */,
 				51FCF0AC28D380D000F09524 /* NetworkManager.swift */,
+				5109807228D7183000B703F4 /* WKWebViewWrapper.swift */,
 				514F67EF28D116E7003C51ED /* LoginViewController.swift */,
 				514F67F128D116E7003C51ED /* Main.storyboard */,
 				514F67F728D116E9003C51ED /* Assets.xcassets */,
@@ -128,6 +134,13 @@
 				514F680328D11BE0003C51ED /* OpenSans-Regular.ttf */,
 			);
 			path = Recources;
+			sourceTree = "<group>";
+		};
+		5177A6D428D8963B001DAE50 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		51FCF09028D270D900F09524 /* OneSignalNotificationServiceExtension */ = {
@@ -158,9 +171,9 @@
 			);
 			name = JustMarkets;
 			packageProductDependencies = (
-				51FCF08728D270C600F09524 /* OneSignal */,
-				51FCF08928D270C600F09524 /* OneSignalExtension */,
-				51FCF0B428D3916300F09524 /* FirebaseRemoteConfig */,
+				5177A6CD28D89594001DAE50 /* FirebaseAnalytics */,
+				5177A6CF28D89594001DAE50 /* FirebaseRemoteConfig */,
+				5177A6D228D895E3001DAE50 /* OneSignal */,
 			);
 			productName = JustMarkets;
 			productReference = 514F67E828D116E7003C51ED /* JustMarkets.app */;
@@ -179,6 +192,9 @@
 			dependencies = (
 			);
 			name = OneSignalNotificationServiceExtension;
+			packageProductDependencies = (
+				5177A6D528D8963B001DAE50 /* OneSignal */,
+			);
 			productName = OneSignalNotificationServiceExtension;
 			productReference = 51FCF08F28D270D900F09524 /* OneSignalNotificationServiceExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -211,8 +227,8 @@
 			);
 			mainGroup = 514F67DF28D116E7003C51ED;
 			packageReferences = (
-				51FCF08628D270C600F09524 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */,
-				51FCF0B328D3916300F09524 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				5177A6CC28D89594001DAE50 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				5177A6D128D895E3001DAE50 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */,
 			);
 			productRefGroup = 514F67E928D116E7003C51ED /* Products */;
 			projectDirPath = "";
@@ -253,6 +269,7 @@
 			files = (
 				51FCF0AD28D380D000F09524 /* NetworkManager.swift in Sources */,
 				514F67F028D116E7003C51ED /* LoginViewController.swift in Sources */,
+				5109807328D7183000B703F4 /* WKWebViewWrapper.swift in Sources */,
 				514F67F628D116E7003C51ED /* JustMarkets.xcdatamodeld in Sources */,
 				514F67EC28D116E7003C51ED /* AppDelegate.swift in Sources */,
 			);
@@ -557,15 +574,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		51FCF08628D270C600F09524 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/OneSignal/OneSignal-XCFramework";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.0;
-			};
-		};
-		51FCF0B328D3916300F09524 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+		5177A6CC28D89594001DAE50 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
 			requirement = {
@@ -573,23 +582,36 @@
 				kind = branch;
 			};
 		};
+		5177A6D128D895E3001DAE50 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/OneSignal/OneSignal-XCFramework";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		51FCF08728D270C600F09524 /* OneSignal */ = {
+		5177A6CD28D89594001DAE50 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 51FCF08628D270C600F09524 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */;
+			package = 5177A6CC28D89594001DAE50 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		5177A6CF28D89594001DAE50 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5177A6CC28D89594001DAE50 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
+		};
+		5177A6D228D895E3001DAE50 /* OneSignal */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5177A6D128D895E3001DAE50 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */;
 			productName = OneSignal;
 		};
-		51FCF08928D270C600F09524 /* OneSignalExtension */ = {
+		5177A6D528D8963B001DAE50 /* OneSignal */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 51FCF08628D270C600F09524 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */;
-			productName = OneSignalExtension;
-		};
-		51FCF0B428D3916300F09524 /* FirebaseRemoteConfig */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 51FCF0B328D3916300F09524 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseRemoteConfig;
+			package = 5177A6D128D895E3001DAE50 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */;
+			productName = OneSignal;
 		};
 /* End XCSwiftPackageProductDependency section */
 

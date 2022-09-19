@@ -10,8 +10,9 @@ import Firebase
 import WebKit
 import SystemConfiguration
 import Network
+import FirebaseAnalytics
 
-class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
+class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
 
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var registerButton: UIButton!
@@ -21,21 +22,145 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate 
     
     private let monitor = NWPathMonitor()
     private let networkManager = NetworkManager()
-    private var languageEndpoint = ""
-    private var registrationEndpoint = "registration/trader"
-    private var loginEndpoint = "login"
     private var currentOpenLink = 0
-    private var lastButtonTapped = ""
+    private var isWebViewError = false
+    private var baseURL = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        monitor.start(queue: .global())
+        self.monitor.start(queue: .global())
         self.webView.isHidden = true
         self.errorLabel.isHidden = true
-        logoAnimation()
-        setupLanguage()
-        networkManager.getBaseURL()
-        // Do any additional setup after loading the view.
+        self.logoAnimation()
+        self.setupLanguage()
+        self.networkManager.getBaseURL()
+        self.checkBaseURL {
+            self.networkManager.getWebViewCookies(link: self.baseURL, completionHandler: {
+                print(HTTPCookieStorage.shared.cookies)
+                self.networkManager.checkLoginStatus(link: self.baseURL, completion: { result in
+                    if result {
+                        DispatchQueue.main.async {
+                            self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.loginEndpoint)
+                        }
+                    }
+                })
+            })
+        }
+        self.webView.configuration.userContentController.add(self, name: "firebase")
+    }
+    
+    func checkBaseURL(completion: @escaping () -> Void) {
+        if monitor.currentPath.status == .satisfied {
+            // Internet Connected
+            let registerLinkString = RemoteConfig.remoteConfig().configValue(forKey: "base_urls").stringValue!
+            let data = registerLinkString.data(using: .utf8)!
+            do {
+                if let jsonArray = try JSONSerialization.jsonObject(with: data, options : .allowFragments) as? [Dictionary<String,Any>] {
+                    print(jsonArray) // use the json here
+                    switch firebaseRemoteConfig {
+                    case "DEV":
+                        for i in jsonArray {
+                            if let links = i["DEV"] as? Array<Any> {
+                                for link in links {
+                                    if links.count > currentOpenLink {
+                                        let group = DispatchGroup()
+                                        group.enter()
+                                        networkManager.checkWebsiteIsAvailable(link: link as! String) { result in
+                                            if result {
+                                                self.baseURL = link as! String
+                                            } else {
+                                                self.currentOpenLink += 1
+                                            }
+                                            group.leave()
+                                        }
+                                        group.wait()
+                                    } else {
+                                        self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
+                                        self.isWebViewError = true
+                                    }
+                                }
+                            }
+                        }
+                    case "STABLE":
+                        for i in jsonArray {
+                            if let links = i["STABLE"] as? Array<Any> {
+                                if links.count > currentOpenLink {
+                                    let link = links[currentOpenLink] as! String
+                                    networkManager.checkWebsiteIsAvailable(link: link) { result in
+                                        if result {
+                                            self.baseURL = link
+                                        } else {
+                                            self.currentOpenLink += 1
+                                        }
+                                    }
+                                } else {
+                                    self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
+                                    self.isWebViewError = true
+                                }
+                            }
+                        }
+                        
+                    case "PROD":
+                        for i in jsonArray {
+                            if let links = i["PROD"] as? Array<Any> {
+                                if links.count > currentOpenLink {
+                                    let link = links[currentOpenLink] as! String
+                                    networkManager.checkWebsiteIsAvailable(link: link) { result in
+                                        if result {
+                                            self.baseURL = link
+                                        } else {
+                                            self.currentOpenLink += 1
+                                        }
+                                    }
+                                } else {
+                                    self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
+                                    self.isWebViewError = true
+                                }
+                            }
+                        }
+                        
+                    default:
+                        self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
+                        self.isWebViewError = true
+                        
+                    }
+                } else {
+                    print("bad json")
+                }
+            } catch let error as NSError {
+                print(error)
+            }
+        } else {
+            self.errorLabel.text = "No internet connection. Connect and try again"
+            self.isWebViewError = true
+        }
+        completion()
+    }
+    
+    private func openWebView(endPoint: String) {
+        if let url = URL(string: baseURL + endPoint) {
+            self.webView.isHidden = false
+            self.webView.navigationDelegate = self
+            self.webView.uiDelegate = self
+            self.webView.allowsBackForwardNavigationGestures = true
+            self.webView.load(URLRequest(url: url))
+            self.errorLabel.isHidden = true
+        }
+    }
+    
+    func userContentController(_ userContentController: WKUserContentController,
+                             didReceive message: WKScriptMessage) {
+      guard let body = message.body as? [String: Any] else { return }
+      guard let command = body["command"] as? String else { return }
+      guard let name = body["name"] as? String else { return }
+
+      if command == "setUserProperty" {
+        guard let value = body["value"] as? String else { return }
+        Analytics.setUserProperty(value, forName: name)
+      } else if command == "logEvent" {
+        guard let params = body["parameters"] as? [String: NSObject] else { return }
+        Analytics.logEvent(name, parameters: params)
+      }
     }
     
     private func setupLanguage() {
@@ -47,71 +172,71 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate 
         case "ar":
             self.registerButton.titleLabel?.text = "تسجيل الاشتراك"
             self.loginButton.titleLabel?.text = "تسجيل الدخول"
-            languageEndpoint = "ar/"
+            networkManager.languageEndpoint = "ar/"
         case "bn":
             self.registerButton.titleLabel?.text = "নিবন্ধীকরণ"
             self.loginButton.titleLabel?.text = "লগ ইন"
-            languageEndpoint = "bn/"
+            networkManager.languageEndpoint = "bn/"
         case "cn":
             self.registerButton.titleLabel?.text = "注册"
             self.loginButton.titleLabel?.text = "登录"
-            languageEndpoint = "cn/"
+            networkManager.languageEndpoint = "cn/"
         case "es":
             self.registerButton.titleLabel?.text = "Registro"
             self.loginButton.titleLabel?.text = "Iniciar sesión"
-            languageEndpoint = "es/"
+            networkManager.languageEndpoint = "es/"
         case "fa":
             self.registerButton.titleLabel?.text = "ثبت نام"
             self.loginButton.titleLabel?.text = "ورود"
-            languageEndpoint = "fa/"
+            networkManager.languageEndpoint = "fa/"
         case "fr":
             self.registerButton.titleLabel?.text = "Inscription"
             self.loginButton.titleLabel?.text = "Connexion"
-            languageEndpoint = "fr/"
+            networkManager.languageEndpoint = "fr/"
         case "hi":
             self.registerButton.titleLabel?.text = "पंजीकरण"
             self.loginButton.titleLabel?.text = "लॉग-इन करें"
-            languageEndpoint = "hi/"
+            networkManager.languageEndpoint = "hi/"
         case "id":
             self.registerButton.titleLabel?.text = "Pendaftaran"
             self.loginButton.titleLabel?.text = "Masuk"
-            languageEndpoint = "id/"
+            networkManager.languageEndpoint = "id/"
         case "jp":
             self.registerButton.titleLabel?.text = "登録"
             self.loginButton.titleLabel?.text = "ログイン"
-            languageEndpoint = "jp/"
+            networkManager.languageEndpoint = "jp/"
         case "ko":
             self.registerButton.titleLabel?.text = "등록"
             self.loginButton.titleLabel?.text = "로그인"
-            languageEndpoint = "ko/"
+            networkManager.languageEndpoint = "ko/"
         case "ms":
             self.registerButton.titleLabel?.text = "Pendaftaran"
             self.loginButton.titleLabel?.text = "Log masuk"
-            languageEndpoint = "ms/"
+            networkManager.languageEndpoint = "ms/"
         case "pk":
             self.registerButton.titleLabel?.text = "رجسٹریشن"
             self.loginButton.titleLabel?.text = "لاگ ان"
-            languageEndpoint = "pk/"
+            networkManager.languageEndpoint = "pk/"
         case "pt":
             self.registerButton.titleLabel?.text = "Cadastro"
             self.loginButton.titleLabel?.text = "Entrar"
-            languageEndpoint = "pt/"
+            networkManager.languageEndpoint = "pt/"
         case "th":
             self.registerButton.titleLabel?.text = "การสมัคร"
             self.loginButton.titleLabel?.text = "ลงชื่อเข้าใช้"
-            languageEndpoint = "th/"
+            networkManager.languageEndpoint = "th/"
         case "tr":
             self.registerButton.titleLabel?.text = "Kayıt"
             self.loginButton.titleLabel?.text = "Giriş Yap"
-            languageEndpoint = "tr/"
+            networkManager.languageEndpoint = "tr/"
         case "vi":
             self.registerButton.titleLabel?.text = "Đăng ký"
             self.loginButton.titleLabel?.text = "Đăng nhập"
-            languageEndpoint = "vi/"
+            networkManager.languageEndpoint = "vi/"
         case "zh":
             self.registerButton.titleLabel?.text = "註冊"
             self.loginButton.titleLabel?.text = "登錄"
-            languageEndpoint = "zh/"
+            networkManager.languageEndpoint = "zh/"
         case .none:
             self.registerButton.titleLabel?.text = "Registration"
             self.loginButton.titleLabel?.text = "Log in"
@@ -134,66 +259,19 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate 
         }
     }
     
-    private func setupWebView(link: String) {
-        if let url = URL(string: link) {
-            checkWebsiteIsAvailable(link: link) { result in
-                if result {
-                    DispatchQueue.main.async {
-                        self.webView.isHidden = false
-                        self.webView.navigationDelegate = self
-                        self.webView.uiDelegate = self
-                        self.webView.allowsBackForwardNavigationGestures = true
-                        self.webView.load(URLRequest(url: url))
-                        self.errorLabel.isHidden = true
-                    }
-                } else {
-                    self.currentOpenLink += 1
-                    if self.lastButtonTapped == "register" {
-                        self.registerButtonAction(self)
-                    } else {
-                        self.loginButtonACtion(self)
-                    }
-                }
-            }
-        }
-    }
-    
-    private func checkWebsiteIsAvailable(link: String, completion: @escaping (Bool) -> Void ) {
-        guard let url = URL(string: link) else { return }
-
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 1.0
-
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("\(error.localizedDescription)")
-                completion(false)
-            }
-            if let httpResponse = response as? HTTPURLResponse {
-                print("statusCode: \(httpResponse.statusCode)")
-                // do your logic here
-                if httpResponse.statusCode == 200 {
-                    completion(true)
-                } else {
-                    completion(false)
-                }
-            }
-        }
-        task.resume()
-    }
-    
+    // OPEN EXTERNAL URSL IN BROWSER
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        if let externals = RemoteConfig.remoteConfig().configValue(forKey: "forExternalOpens").jsonValue as? [String] {
-            for i in externals {
-                if (webView.url!.absoluteString.contains(i)) {
-                    UIApplication.shared.open(webView.url!)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        self.webView.isHidden = true
-                    }
-                    break
-                }
-            }
-        }
+//        if let externals = RemoteConfig.remoteConfig().configValue(forKey: "forExternalOpens").jsonValue as? [String] {
+//            for i in externals {
+//                if (webView.url!.absoluteString.contains(i)) {
+//                    UIApplication.shared.open(webView.url!)
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                        self.webView.isHidden = true
+//                    }
+//                    break
+//                }
+//            }
+//        }
     }
     
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
@@ -214,83 +292,23 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate 
     }
     
     func prepareLink(endPoint: String) {
-        if monitor.currentPath.status == .satisfied {
-            // Internet Connected
-            let registerLinkString = RemoteConfig.remoteConfig().configValue(forKey: "base_urls").stringValue!
-            let data = registerLinkString.data(using: .utf8)!
-            do {
-                if let jsonArray = try JSONSerialization.jsonObject(with: data, options : .allowFragments) as? [Dictionary<String,Any>]
-                {
-                    print(jsonArray) // use the json here
-                    switch firebaseRemoteConfig {
-                    case "DEV":
-                        for i in jsonArray {
-                            if let links = i["DEV"] as? Array<Any> {
-                                if links.count > currentOpenLink {
-                                    setupWebView(link: links[currentOpenLink] as! String + "\(languageEndpoint)\(endPoint)")
-                                } else {
-                                    self.webView.isHidden = true
-                                    // SHOW ERROR LABEL
-                                    self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
-                                    self.errorLabel.isHidden = false
-                                }
-                            }
-                        }
-                    case "STABLE":
-                        for i in jsonArray {
-                            if let links = i["STABLE"] as? Array<Any> {
-                                if links.count > currentOpenLink {
-                                    setupWebView(link: links[currentOpenLink] as! String + "\(languageEndpoint)\(endPoint)")
-                                } else {
-                                    self.webView.isHidden = true
-                                    // SHOW ERROR LABEL
-                                    self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
-                                    self.errorLabel.isHidden = false
-                                }
-                            }
-                        }
-                    case "PROD":
-                        for i in jsonArray {
-                            if let links = i["PROD"] as? Array<Any> {
-                                if links.count > currentOpenLink {
-                                    setupWebView(link: links[currentOpenLink] as! String + "\(languageEndpoint)\(endPoint)")
-                                } else {
-                                    self.webView.isHidden = true
-                                    // SHOW ERROR LABEL
-                                    self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
-                                    self.errorLabel.isHidden = false
-                                }
-                            }
-                        }
-                    default:
-                        self.webView.isHidden = true
-                        // SHOW ERROR LABEL
-                        self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
-                        self.errorLabel.isHidden = false
-                    }
-                } else {
-                    print("bad json")
-                }
-            } catch let error as NSError {
-                print(error)
-            }
-        } else {
-            // No Internet connection
-            self.webView.isHidden = true
-            // SHOW ERROR LABEL
-            self.errorLabel.text = "No internet connection. Connect and try again"
-            self.errorLabel.isHidden = false
-        }
+        
     }
 
     @IBAction func registerButtonAction(_ sender: Any) {
-        lastButtonTapped = "register"
-        prepareLink(endPoint: registrationEndpoint)
+        if isWebViewError {
+            errorLabel.isHidden = false
+        } else {
+            openWebView(endPoint: networkManager.languageEndpoint+networkManager.registrationEndpoint)
+        }
     }
     
     @IBAction func loginButtonACtion(_ sender: Any) {
-        lastButtonTapped = "login"
-        prepareLink(endPoint: loginEndpoint)
+        if isWebViewError {
+            errorLabel.isHidden = false
+        } else {
+            openWebView(endPoint: networkManager.languageEndpoint+networkManager.loginEndpoint)
+        }
     }
     
 }

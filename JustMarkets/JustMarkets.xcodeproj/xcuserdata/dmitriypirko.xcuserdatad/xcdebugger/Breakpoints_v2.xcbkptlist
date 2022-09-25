@@ -39,16 +39,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B62DC2D8-40D3-45B2-8618-8E1C4144AB55"
+            uuid = "B6FC9172-E5A9-4118-B0E1-C73D6B5AD8F8"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "JustMarkets/NetworkManager.swift"
+            filePath = "JustMarkets/LoginViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "131"
-            endingLineNumber = "131"
-            landmarkName = "checkLoginStatus(link:completion:)"
+            startingLineNumber = "228"
+            endingLineNumber = "228"
+            landmarkName = "userContentController(_:didReceive:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

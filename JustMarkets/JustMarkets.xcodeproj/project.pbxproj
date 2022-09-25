@@ -19,6 +19,7 @@
 		5177A6D028D89594001DAE50 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 5177A6CF28D89594001DAE50 /* FirebaseRemoteConfig */; };
 		5177A6D328D895E3001DAE50 /* OneSignal in Frameworks */ = {isa = PBXBuildFile; productRef = 5177A6D228D895E3001DAE50 /* OneSignal */; };
 		5177A6D628D8963B001DAE50 /* OneSignal in Frameworks */ = {isa = PBXBuildFile; productRef = 5177A6D528D8963B001DAE50 /* OneSignal */; };
+		51D6BC5828DEF6B40045EB25 /* AppsFlyerLib in Frameworks */ = {isa = PBXBuildFile; productRef = 51D6BC5728DEF6B40045EB25 /* AppsFlyerLib */; };
 		51FCF09228D270D900F09524 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FCF09128D270D900F09524 /* NotificationService.swift */; };
 		51FCF09628D270D900F09524 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 51FCF08F28D270D900F09524 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		51FCF0AB28D3808600F09524 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 51FCF0AA28D3808600F09524 /* GoogleService-Info.plist */; };
@@ -74,6 +75,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5177A6CE28D89594001DAE50 /* FirebaseAnalytics in Frameworks */,
+				51D6BC5828DEF6B40045EB25 /* AppsFlyerLib in Frameworks */,
 				5177A6D028D89594001DAE50 /* FirebaseRemoteConfig in Frameworks */,
 				5177A6D328D895E3001DAE50 /* OneSignal in Frameworks */,
 			);
@@ -174,6 +176,7 @@
 				5177A6CD28D89594001DAE50 /* FirebaseAnalytics */,
 				5177A6CF28D89594001DAE50 /* FirebaseRemoteConfig */,
 				5177A6D228D895E3001DAE50 /* OneSignal */,
+				51D6BC5728DEF6B40045EB25 /* AppsFlyerLib */,
 			);
 			productName = JustMarkets;
 			productReference = 514F67E828D116E7003C51ED /* JustMarkets.app */;
@@ -229,6 +232,7 @@
 			packageReferences = (
 				5177A6CC28D89594001DAE50 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				5177A6D128D895E3001DAE50 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */,
+				51D6BC5628DEF6B40045EB25 /* XCRemoteSwiftPackageReference "AppsFlyerFramework" */,
 			);
 			productRefGroup = 514F67E928D116E7003C51ED /* Products */;
 			projectDirPath = "";
@@ -590,6 +594,14 @@
 				kind = branch;
 			};
 		};
+		51D6BC5628DEF6B40045EB25 /* XCRemoteSwiftPackageReference "AppsFlyerFramework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AppsFlyerSDK/AppsFlyerFramework";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -612,6 +624,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5177A6D128D895E3001DAE50 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */;
 			productName = OneSignal;
+		};
+		51D6BC5728DEF6B40045EB25 /* AppsFlyerLib */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 51D6BC5628DEF6B40045EB25 /* XCRemoteSwiftPackageReference "AppsFlyerFramework" */;
+			productName = AppsFlyerLib;
 		};
 /* End XCSwiftPackageProductDependency section */
 

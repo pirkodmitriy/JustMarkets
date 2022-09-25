@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "AppsFlyerLib",
+        "repositoryURL": "https://github.com/AppsFlyerSDK/AppsFlyerFramework",
+        "state": {
+          "branch": "master",
+          "revision": "e04fd6e0c059537f5c5e50d4dd09e4670befa1ce",
+          "version": null
+        }
+      },
+      {
         "package": "BoringSSL-GRPC",
         "repositoryURL": "https://github.com/firebase/boringssl-SwiftPM.git",
         "state": {

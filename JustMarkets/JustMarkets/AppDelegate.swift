@@ -6,12 +6,15 @@
 //
 
 // FIREBASE REMOTE CONFIG INDICATOR: SET "DEV", "STABLE" or "PROD"
-let firebaseRemoteConfig = "DEV"
+let firebaseRemoteConfig = "PROD"
 
 import UIKit
 import CoreData
 import OneSignal
 import Firebase
+import FirebaseAnalytics
+import AppsFlyerLib
+import AppTrackingTransparency
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -41,7 +44,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Firebase
         FirebaseApp.configure()
         
+        //MARK: APPSFLYER
+        AppsFlyerLib.shared().isDebug = true
+        AppsFlyerLib.shared().appsFlyerDevKey = "GmKygYSXY6qDV59DgqMShP"
+        AppsFlyerLib.shared().appleAppID = "id1489327144"
+        NotificationCenter.default.addObserver(self, selector: NSSelectorFromString("sendLaunch"), name: UIApplication.didBecomeActiveNotification, object: nil)
+        AppsFlyerLib.shared().waitForATTUserAuthorization(timeoutInterval: 30)
+        
         return true
+    }
+    
+    @objc func sendLaunch() {
+        AppsFlyerLib.shared().start()
+    }
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        requestAppTrackingPermission()
+    }
+    
+    func requestAppTrackingPermission() {
+        // start is usually called here:
+        // AppsFlyerLib.shared().start()
+        if #available(iOS 14, *) {
+          ATTrackingManager.requestTrackingAuthorization { (status) in
+            switch status {
+            case .denied:
+                print("AuthorizationSatus is denied")
+            case .notDetermined:
+                print("AuthorizationSatus is notDetermined")
+            case .restricted:
+                print("AuthorizationSatus is restricted")
+            case .authorized:
+                print("AuthorizationSatus is authorized")
+            @unknown default:
+                fatalError("Invalid authorization status")
+            }
+              AppsFlyerLib.shared().start()
+          }
+        } else {
+            AppsFlyerLib.shared().start()
+        }
     }
     
     // MARK: - Core Data stack

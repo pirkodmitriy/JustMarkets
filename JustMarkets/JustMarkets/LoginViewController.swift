@@ -11,6 +11,7 @@ import WebKit
 import SystemConfiguration
 import Network
 import FirebaseAnalytics
+import AppsFlyerLib
 
 class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
 
@@ -25,28 +26,62 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
     private var currentOpenLink = 0
     private var isWebViewError = false
     private var baseURL = ""
+    private var campList = String()
+    private var analyticsData: [AnyHashable: Any]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        AppsFlyerLib.shared().delegate = self
+        self.webView.configuration.userContentController.add(self, name: "firebase")
         self.monitor.start(queue: .global())
         self.webView.isHidden = true
         self.errorLabel.isHidden = true
         self.logoAnimation()
-        self.setupLanguage()
-        self.networkManager.getBaseURL()
-        self.checkBaseURL {
-            self.networkManager.getWebViewCookies(link: self.baseURL, completionHandler: {
-                print(HTTPCookieStorage.shared.cookies)
-                self.networkManager.checkLoginStatus(link: self.baseURL, completion: { result in
-                    if result {
-                        DispatchQueue.main.async {
-                            self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.loginEndpoint)
-                        }
-                    }
-                })
-            })
+        self.setupLanguage(language: "")
+        self.getBaseURL()
+    }
+    
+    func getBaseURL() {
+        setupRemoteConfigDefaults()
+        fetchRemoteConfigDefaults()
+    }
+    
+    private func setupRemoteConfigDefaults() {
+        let defaultsValues = [
+            "base_urls" : "[{\"DEV\":[\"https://justmarkets.com/\",\"https://iosjmdev9.justforex.net/\",\"https://justmarkets.com/\"],\"STABLE\":[\"https://ios.justforex.net/\"],\"PROD\":[\"https://ios.justforex.net/\"]}]" as NSObject,
+            "forExternalOpens": "[{\"justmarkets.com\",\"justmarkets.biz\",\"justmarkets.asia\"}]" as NSObject
+        ]
+        RemoteConfig.remoteConfig().setDefaults(defaultsValues)
+    }
+    
+    private func fetchRemoteConfigDefaults() {
+        let debugSettings = RemoteConfigSettings()
+        RemoteConfig.remoteConfig().configSettings = debugSettings
+        RemoteConfig.remoteConfig().fetch(withExpirationDuration: 0) { status, error in
+            guard error == nil else {
+                print(error!)
+                return
+            }
+            RemoteConfig.remoteConfig().activate { status, error in
+                guard error == nil else {
+                    print(error!)
+                    return
+                }
+                if RemoteConfig.remoteConfig().configValue(forKey: "base_urls").stringValue! == "" {
+                    self.setupRemoteConfigDefaults()
+                }
+                self.checkBaseURL {
+                        print(HTTPCookieStorage.shared.cookies)
+                    self.networkManager.checkLoginStatus(link: self.baseURL+self.networkManager.checkLoginStatusEndpoint, completion: { result in
+                            if result {
+                                DispatchQueue.main.async {
+                                    self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.loginEndpoint)
+                                }
+                            }
+                        })
+                }
+            }
         }
-        self.webView.configuration.userContentController.add(self, name: "firebase")
     }
     
     func checkBaseURL(completion: @escaping () -> Void) {
@@ -56,11 +91,11 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
             let data = registerLinkString.data(using: .utf8)!
             do {
                 if let jsonArray = try JSONSerialization.jsonObject(with: data, options : .allowFragments) as? [Dictionary<String,Any>] {
-                    print(jsonArray) // use the json here
                     switch firebaseRemoteConfig {
                     case "DEV":
                         for i in jsonArray {
-                            if let links = i["DEV"] as? Array<Any> {
+                            if var links = i["DEV"] as? Array<Any> {
+                                links.reverse()
                                 for link in links {
                                     if links.count > currentOpenLink {
                                         let group = DispatchGroup()
@@ -79,46 +114,75 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                                         self.isWebViewError = true
                                     }
                                 }
+                                if self.baseURL == "" {
+                                    DispatchQueue.main.async {
+                                        self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
+                                        self.isWebViewError = true
+                                    }
+                                }
                             }
                         }
                     case "STABLE":
                         for i in jsonArray {
-                            if let links = i["STABLE"] as? Array<Any> {
-                                if links.count > currentOpenLink {
-                                    let link = links[currentOpenLink] as! String
-                                    networkManager.checkWebsiteIsAvailable(link: link) { result in
-                                        if result {
-                                            self.baseURL = link
-                                        } else {
-                                            self.currentOpenLink += 1
+                            if var links = i["STABLE"] as? Array<Any> {
+                                links.reverse()
+                                for link in links {
+                                    if links.count > currentOpenLink {
+                                        let group = DispatchGroup()
+                                        group.enter()
+                                        networkManager.checkWebsiteIsAvailable(link: link as! String) { result in
+                                            if result {
+                                                self.baseURL = link as! String
+                                            } else {
+                                                self.currentOpenLink += 1
+                                            }
+                                            group.leave()
                                         }
+                                        group.wait()
+                                    } else {
+                                        self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
+                                        self.isWebViewError = true
                                     }
-                                } else {
-                                    self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
-                                    self.isWebViewError = true
+                                }
+                                if self.baseURL == "" {
+                                    DispatchQueue.main.async {
+                                        self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
+                                        self.isWebViewError = true
+                                    }
                                 }
                             }
                         }
-                        
                     case "PROD":
                         for i in jsonArray {
-                            if let links = i["PROD"] as? Array<Any> {
-                                if links.count > currentOpenLink {
-                                    let link = links[currentOpenLink] as! String
-                                    networkManager.checkWebsiteIsAvailable(link: link) { result in
-                                        if result {
-                                            self.baseURL = link
-                                        } else {
-                                            self.currentOpenLink += 1
+                            print(jsonArray)
+                            if var links = i["PROD"] as? Array<Any> {
+                                //links.reverse()
+                                for var link in links {
+                                    if links.count > currentOpenLink {
+                                        let group = DispatchGroup()
+                                        group.enter()
+                                        networkManager.checkWebsiteIsAvailable(link: link as! String) { result in
+                                            if result {
+                                                self.baseURL = link as! String
+                                            } else {
+                                                self.currentOpenLink += 1
+                                            }
+                                            group.leave()
                                         }
+                                        group.wait()
+                                    } else {
+                                        self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
+                                        self.isWebViewError = true
                                     }
-                                } else {
-                                    self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
-                                    self.isWebViewError = true
+                                }
+                                if self.baseURL == "" {
+                                    DispatchQueue.main.async {
+                                        self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
+                                        self.isWebViewError = true
+                                    }
                                 }
                             }
                         }
-                        
                     default:
                         self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
                         self.isWebViewError = true
@@ -126,9 +190,15 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                     }
                 } else {
                     print("bad json")
+                    self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
+                    self.isWebViewError = true
+                    self.webView.isHidden = true
                 }
             } catch let error as NSError {
                 print(error)
+                self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
+                self.isWebViewError = true
+                self.webView.isHidden = true
             }
         } else {
             self.errorLabel.text = "No internet connection. Connect and try again"
@@ -139,10 +209,15 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
     
     private func openWebView(endPoint: String) {
         if let url = URL(string: baseURL + endPoint) {
+            print(url)
             self.webView.isHidden = false
             self.webView.navigationDelegate = self
             self.webView.uiDelegate = self
             self.webView.allowsBackForwardNavigationGestures = true
+            let cookies = HTTPCookieStorage.shared.cookies ?? []
+            for cookie in cookies {
+                webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
+            }
             self.webView.load(URLRequest(url: url))
             self.errorLabel.isHidden = true
         }
@@ -150,21 +225,45 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
     
     func userContentController(_ userContentController: WKUserContentController,
                              didReceive message: WKScriptMessage) {
-      guard let body = message.body as? [String: Any] else { return }
-      guard let command = body["command"] as? String else { return }
-      guard let name = body["name"] as? String else { return }
+        guard let body = message.body as? [String: Any] else { return }
+        guard let command = body["command"] as? String else { return }
 
-      if command == "setUserProperty" {
-        guard let value = body["value"] as? String else { return }
-        Analytics.setUserProperty(value, forName: name)
-      } else if command == "logEvent" {
-        guard let params = body["parameters"] as? [String: NSObject] else { return }
-        Analytics.logEvent(name, parameters: params)
-      }
+        if command == "logout" {
+            self.webView.isHidden = true
+        } else if command == "changeLang" {
+            guard let value = body["value"] as? String else { return }
+            setupLanguage(language: value)
+        } else if command == "copyToClipboard" {
+            guard let value = body["value"] as? String else { return }
+            UIPasteboard.general.string = value
+        } else if command == "RegistrationSuccess" {
+            guard let value = body["value"] as? String else { return }
+            AppsFlyerLib.shared().logEvent(name: "RegistrationSuccess", values: ["USER_CODE": value], completionHandler: { (response: [String : Any]?, error: Error?) in
+                         if let response = response {
+                           print("In app event callback Success: ", response)
+                         }
+                         if let error = error {
+                           print("In app event callback ERROR:", error)
+                         }
+                       })
+        } else if command == "AuthSuccess" {
+            guard let value = body["value"] as? String else { return }
+            AppsFlyerLib.shared().logEvent(name: "AuthSuccess", values: ["USER_CODE": value], completionHandler: { (response: [String : Any]?, error: Error?) in
+                         if let response = response {
+                           print("In app event callback Success: ", response)
+                         }
+                         if let error = error {
+                           print("In app event callback ERROR:", error)
+                         }
+                       })
+        }
     }
     
-    private func setupLanguage() {
-        let locale = Locale.current.languageCode
+    private func setupLanguage(language: String) {
+        var locale = Locale.current.languageCode
+        if language != "" {
+            locale = language
+        }
         switch locale {
         case "en":
             self.registerButton.titleLabel?.text = "Registration"
@@ -261,17 +360,38 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
     
     // OPEN EXTERNAL URSL IN BROWSER
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-//        if let externals = RemoteConfig.remoteConfig().configValue(forKey: "forExternalOpens").jsonValue as? [String] {
-//            for i in externals {
-//                if (webView.url!.absoluteString.contains(i)) {
-//                    UIApplication.shared.open(webView.url!)
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//                        self.webView.isHidden = true
-//                    }
-//                    break
-//                }
-//            }
-//        }
+            if let externals = RemoteConfig.remoteConfig().configValue(forKey: "forExternalOpens").jsonValue as? [String] {
+                for i in externals {
+                    if (webView.url!.absoluteString.contains(i)) {
+                        UIApplication.shared.open(webView.url!)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            self.webView.isHidden = true
+                        }
+                        break
+                    }
+                }
+            }
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+                    if webView.url!.absoluteString.contains("accounts") {
+                        HTTPCookieStorage.shared.removeCookies(since: .distantPast)
+                        self.webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+                            for cookie in cookies {
+                                var cookieProperties = [HTTPCookiePropertyKey: Any]()
+                                cookieProperties[.name] = cookie.name
+                                cookieProperties[.value] = cookie.value
+                                cookieProperties[.domain] = cookie.domain
+                                cookieProperties[.path] = cookie.path
+                                cookieProperties[.version] = cookie.version
+                                cookieProperties[.expires] = Date().addingTimeInterval(31536000)
+            
+                                let newCookie = HTTPCookie(properties: cookieProperties)
+                                HTTPCookieStorage.shared.setCookie(newCookie!)
+                            }
+                        }
+                    }
+        
     }
     
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
@@ -290,10 +410,6 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
         // Show error view
         print(error)
     }
-    
-    func prepareLink(endPoint: String) {
-        
-    }
 
     @IBAction func registerButtonAction(_ sender: Any) {
         if isWebViewError {
@@ -309,6 +425,51 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
         } else {
             openWebView(endPoint: networkManager.languageEndpoint+networkManager.loginEndpoint)
         }
+    }
+    
+}
+
+extension LoginViewController: AppsFlyerLibDelegate {
+    // Handle Organic/Non-organic installation
+    func onConversionDataSuccess(_ installData: [AnyHashable: Any]) {
+        
+        if let status = installData["af_status"] as? String {
+            if (status == "Non-organic") {
+                if let sourceID = installData["media_source"],
+                   let campaign = installData["campaign"] {
+                    print("This is a Non-Organic install. Media source: \(sourceID)  Campaign: \(campaign)")
+                    self.campList = "\(campaign)"
+                }
+            } else {
+                print("This is an organic install.")
+            }
+            if let is_first_launch = installData["is_first_launch"] as? Bool,
+               is_first_launch {
+                print("First Launch")
+            } else {
+                print("Not First Launch")
+            }
+        }
+        self.analyticsData = installData
+        
+        
+    }
+    func onConversionDataFail(_ error: Error) {
+        
+        print(error)
+    }
+    //Handle Deep Link
+    func onAppOpenAttribution(_ attributionData: [AnyHashable : Any]) {
+        //Handle Deep Link Data
+        print("onAppOpenAttribution data:")
+        for (key, value) in attributionData {
+            
+            print(key, ":",value)
+        }
+    }
+    func onAppOpenAttributionFailure(_ error: Error) {
+        
+        print(error)
     }
     
 }

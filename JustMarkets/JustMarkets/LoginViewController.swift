@@ -28,9 +28,11 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
     private var baseURL = ""
     private var campList = String()
     private var analyticsData: [AnyHashable: Any]?
+    private var userAgent: String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        userAgent = webView.value(forKey: "userAgent") as! String
         AppsFlyerLib.shared().delegate = self
         self.webView.configuration.userContentController.add(self, name: "firebase")
         self.monitor.start(queue: .global())
@@ -72,7 +74,7 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                 }
                 self.checkBaseURL {
                         print(HTTPCookieStorage.shared.cookies)
-                    self.networkManager.checkLoginStatus(link: self.baseURL+self.networkManager.checkLoginStatusEndpoint, completion: { result in
+                    self.networkManager.checkLoginStatus(link: self.baseURL+self.networkManager.checkLoginStatusEndpoint, userAgent: self.userAgent, completion: { result in
                             if result {
                                 DispatchQueue.main.async {
                                     self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.loginEndpoint)
@@ -347,12 +349,12 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
 
     private func logoAnimation() {
         //set items start positions
-        self.logoImageView.transform = CGAffineTransform(translationX: 0, y: 600)
+        self.logoImageView.transform = CGAffineTransform(translationX: 0, y: 0)
         self.registerButton.transform = CGAffineTransform(translationX: 0, y: 300)
         self.loginButton.transform = CGAffineTransform(translationX: 0, y: 200)
         //move items to end positions
         UIView.animate(withDuration: 2.0) {
-            self.logoImageView.transform = CGAffineTransform(translationX: 0, y: 0)
+            self.logoImageView.transform = CGAffineTransform(translationX: 0, y: -100)
             self.registerButton.transform = CGAffineTransform(translationX: 0, y: 0)
             self.loginButton.transform = CGAffineTransform(translationX: 0, y: 0)
         }

@@ -41,8 +41,9 @@ class NetworkManager {
         task.resume()
     }
     
-    func checkLoginStatus(link: String, completion: @escaping(Bool) -> Void) {
-        guard let url = URL(string: link) else { return }
+    func checkLoginStatus(link: String, userAgent: String, completion: @escaping(Bool) -> Void) {
+        
+        guard var url = URL(string: link) else { return }
         
         var refresh_token = ""
         let cookies = HTTPCookieStorage.shared.cookies!
@@ -59,12 +60,12 @@ class NetworkManager {
         request.httpMethod = "POST"
         request.setValue("content-type", forHTTPHeaderField: "application/json")
         request.setValue("Accept-Language", forHTTPHeaderField: "en")
-        request.setValue("Cookie", forHTTPHeaderField: "last_locale=en;refresh_token=\(refresh_token)")
+        request.setValue("Cookie", forHTTPHeaderField: "refresh_token=\(refresh_token)")
         DispatchQueue.main.async {
-            request.setValue("\(String(describing: WKWebView().value(forKey: "userAgent")))", forHTTPHeaderField: "User-Agent")
+            request.setValue("\(userAgent)", forHTTPHeaderField: "User-Agent")
         }
         let dataString = """
-        [{"operationName":"\(refresh_token)","variables":{},"extensions":{},"query":"mutation RefreshTokens {\n  refreshTokens {\n    expiry\n  }\n}"}]
+        [{"operationName":"RefreshTokens","variables":{},"extensions":{},"query":"mutation RefreshTokens {\n  refreshTokens {\n    expiry\n  }\n}"}]
         """
         let body = Data(dataString.utf8)
         request.httpBody = body

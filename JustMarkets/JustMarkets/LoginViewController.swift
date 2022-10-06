@@ -22,6 +22,7 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
     @IBOutlet weak var errorLabel: UILabel!
     
     private let monitor = NWPathMonitor()
+    var queue = DispatchQueue(label: "Monitor")
     private let networkManager = NetworkManager()
     private var currentOpenLink = 0
     private var isWebViewError = false
@@ -35,12 +36,25 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
         userAgent = webView.value(forKey: "userAgent") as! String
         AppsFlyerLib.shared().delegate = self
         self.webView.configuration.userContentController.add(self, name: "firebase")
-        self.monitor.start(queue: .global())
+        self.setupLanguage(language: "")
         self.webView.isHidden = true
         self.errorLabel.isHidden = true
         self.logoAnimation()
-        self.setupLanguage(language: "")
         self.getBaseURL()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        self.monitor.pathUpdateHandler = { path in
+            if path.status == .satisfied {
+                self.isWebViewError = false
+            } else {
+                self.isWebViewError = true
+                DispatchQueue.main.async {
+                    self.errorLabel.text = "No internet connection. Connect and try again"
+                }
+            }
+        }
+        self.monitor.start(queue: queue)
     }
     
     func getBaseURL() {
@@ -262,86 +276,83 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
     }
     
     private func setupLanguage(language: String) {
-        var locale = Locale.current.languageCode
+        var locale = String(Locale.preferredLanguages[0].prefix(2))
         if language != "" {
             locale = language
         }
         switch locale {
         case "en":
-            self.registerButton.titleLabel?.text = "Registration"
-            self.loginButton.titleLabel?.text = "Log in"
+            self.registerButton.setTitle("Registration",for: .normal)
+            self.loginButton.setTitle("Log in",for: .normal)
         case "ar":
-            self.registerButton.titleLabel?.text = "تسجيل الاشتراك"
-            self.loginButton.titleLabel?.text = "تسجيل الدخول"
+            self.registerButton.setTitle("تسجيل الاشتراك",for: .normal)
+            self.loginButton.setTitle("تسجيل الدخول",for: .normal)
             networkManager.languageEndpoint = "ar/"
         case "bn":
-            self.registerButton.titleLabel?.text = "নিবন্ধীকরণ"
-            self.loginButton.titleLabel?.text = "লগ ইন"
+            self.registerButton.setTitle("নিবন্ধীকরণ",for: .normal)
+            self.loginButton.setTitle("লগ ইন",for: .normal)
             networkManager.languageEndpoint = "bn/"
         case "cn":
-            self.registerButton.titleLabel?.text = "注册"
-            self.loginButton.titleLabel?.text = "登录"
+            self.registerButton.setTitle("注册",for: .normal)
+            self.loginButton.setTitle("登录",for: .normal)
             networkManager.languageEndpoint = "cn/"
         case "es":
-            self.registerButton.titleLabel?.text = "Registro"
-            self.loginButton.titleLabel?.text = "Iniciar sesión"
+            self.registerButton.setTitle("Registro",for: .normal)
+            self.loginButton.setTitle("Iniciar sesión",for: .normal)
             networkManager.languageEndpoint = "es/"
         case "fa":
-            self.registerButton.titleLabel?.text = "ثبت نام"
-            self.loginButton.titleLabel?.text = "ورود"
+            self.registerButton.setTitle("ثبت نام",for: .normal)
+            self.loginButton.setTitle("ورود",for: .normal)
             networkManager.languageEndpoint = "fa/"
         case "fr":
-            self.registerButton.titleLabel?.text = "Inscription"
-            self.loginButton.titleLabel?.text = "Connexion"
+            self.registerButton.setTitle("Inscription",for: .normal)
+            self.loginButton.setTitle("Connexion",for: .normal)
             networkManager.languageEndpoint = "fr/"
         case "hi":
-            self.registerButton.titleLabel?.text = "पंजीकरण"
-            self.loginButton.titleLabel?.text = "लॉग-इन करें"
+            self.registerButton.setTitle("पंजीकरण",for: .normal)
+            self.loginButton.setTitle("लॉग-इन करें",for: .normal)
             networkManager.languageEndpoint = "hi/"
         case "id":
-            self.registerButton.titleLabel?.text = "Pendaftaran"
-            self.loginButton.titleLabel?.text = "Masuk"
+            self.registerButton.setTitle("Pendaftaran",for: .normal)
+            self.loginButton.setTitle("Masuk",for: .normal)
             networkManager.languageEndpoint = "id/"
         case "jp":
-            self.registerButton.titleLabel?.text = "登録"
-            self.loginButton.titleLabel?.text = "ログイン"
+            self.registerButton.setTitle("登録",for: .normal)
+            self.loginButton.setTitle("ログイン",for: .normal)
             networkManager.languageEndpoint = "jp/"
         case "ko":
-            self.registerButton.titleLabel?.text = "등록"
-            self.loginButton.titleLabel?.text = "로그인"
+            self.registerButton.setTitle("등록",for: .normal)
+            self.loginButton.setTitle("로그인",for: .normal)
             networkManager.languageEndpoint = "ko/"
         case "ms":
-            self.registerButton.titleLabel?.text = "Pendaftaran"
-            self.loginButton.titleLabel?.text = "Log masuk"
+            self.registerButton.setTitle("Pendaftaran",for: .normal)
+            self.loginButton.setTitle("Log masuk",for: .normal)
             networkManager.languageEndpoint = "ms/"
         case "pk":
-            self.registerButton.titleLabel?.text = "رجسٹریشن"
-            self.loginButton.titleLabel?.text = "لاگ ان"
+            self.registerButton.setTitle("رجسٹریشن",for: .normal)
+            self.loginButton.setTitle("Log in",for: .normal)
             networkManager.languageEndpoint = "pk/"
         case "pt":
-            self.registerButton.titleLabel?.text = "Cadastro"
-            self.loginButton.titleLabel?.text = "Entrar"
+            self.registerButton.setTitle("Cadastro",for: .normal)
+            self.loginButton.setTitle("Entrar",for: .normal)
             networkManager.languageEndpoint = "pt/"
         case "th":
-            self.registerButton.titleLabel?.text = "การสมัคร"
-            self.loginButton.titleLabel?.text = "ลงชื่อเข้าใช้"
+            self.registerButton.setTitle("การสมัคร",for: .normal)
+            self.loginButton.setTitle("ลงชื่อเข้าใช้",for: .normal)
             networkManager.languageEndpoint = "th/"
         case "tr":
-            self.registerButton.titleLabel?.text = "Kayıt"
-            self.loginButton.titleLabel?.text = "Giriş Yap"
+            self.registerButton.setTitle("Kayıt",for: .normal)
+            self.loginButton.setTitle("Giriş Yap",for: .normal)
             networkManager.languageEndpoint = "tr/"
         case "vi":
-            self.registerButton.titleLabel?.text = "Đăng ký"
-            self.loginButton.titleLabel?.text = "Đăng nhập"
+            self.registerButton.setTitle("Đăng ký",for: .normal)
+            self.loginButton.setTitle("Đăng nhập",for: .normal)
             networkManager.languageEndpoint = "vi/"
         case "zh":
-            self.registerButton.titleLabel?.text = "註冊"
-            self.loginButton.titleLabel?.text = "登錄"
+            self.registerButton.setTitle("註冊",for: .normal)
+            self.loginButton.setTitle("登錄",for: .normal)
             networkManager.languageEndpoint = "zh/"
-        case .none:
-            self.registerButton.titleLabel?.text = "Registration"
-            self.loginButton.titleLabel?.text = "Log in"
-        case .some(_):
+        default:
             self.registerButton.titleLabel?.text = "Registration"
             self.loginButton.titleLabel?.text = "Log in"
         }
@@ -366,8 +377,8 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                 for i in externals {
                     if (webView.url!.absoluteString.contains(i)) {
                         UIApplication.shared.open(webView.url!)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            self.webView.isHidden = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            self.webView.goBack()
                         }
                         break
                     }
@@ -418,6 +429,7 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
             errorLabel.isHidden = false
         } else {
             openWebView(endPoint: networkManager.languageEndpoint+networkManager.registrationEndpoint)
+            errorLabel.isHidden = true
         }
     }
     
@@ -426,6 +438,7 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
             errorLabel.isHidden = false
         } else {
             openWebView(endPoint: networkManager.languageEndpoint+networkManager.loginEndpoint)
+            errorLabel.isHidden = true
         }
     }
     

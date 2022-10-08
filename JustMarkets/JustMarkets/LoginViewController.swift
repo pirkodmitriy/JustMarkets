@@ -375,12 +375,27 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
             if let externals = RemoteConfig.remoteConfig().configValue(forKey: "forExternalOpens").jsonValue as? [String] {
                 for i in externals {
-                    if (webView.url!.absoluteString.contains(i)) {
-                        UIApplication.shared.open(webView.url!)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            self.webView.goBack()
+                    if #available(iOS 16.0, *) {
+                        if let domain = webView.url?.host() {
+                            if domain == i {
+                                UIApplication.shared.open(webView.url!)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                    self.webView.goBack()
+                                }
+                                break
+                            }
                         }
-                        break
+                    } else {
+                        // Fallback on earlier versions
+                        if let domain = webView.url?.host  {
+                            if domain == i {
+                                UIApplication.shared.open(webView.url!)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                    self.webView.goBack()
+                                }
+                                break
+                            }
+                        }
                     }
                 }
             }

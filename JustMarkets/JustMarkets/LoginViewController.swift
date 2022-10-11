@@ -130,12 +130,12 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                                         self.isWebViewError = true
                                     }
                                 }
-                                if self.baseURL == "" {
-                                    DispatchQueue.main.async {
-                                        self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
-                                        self.isWebViewError = true
-                                    }
-                                }
+                            }
+                        }
+                        if self.baseURL == "" {
+                            DispatchQueue.main.async {
+                                self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
+                                self.isWebViewError = true
                             }
                         }
                     case "STABLE":
@@ -160,20 +160,20 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                                         self.isWebViewError = true
                                     }
                                 }
-                                if self.baseURL == "" {
-                                    DispatchQueue.main.async {
-                                        self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
-                                        self.isWebViewError = true
-                                    }
-                                }
+                            }
+                        }
+                        if self.baseURL == "" {
+                            DispatchQueue.main.async {
+                                self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
+                                self.isWebViewError = true
                             }
                         }
                     case "PROD":
                         for i in jsonArray {
                             print(jsonArray)
-                            if var links = i["PROD"] as? Array<Any> {
+                            if let links = i["PROD"] as? Array<Any> {
                                 //links.reverse()
-                                for var link in links {
+                                for link in links {
                                     if links.count > currentOpenLink {
                                         let group = DispatchGroup()
                                         group.enter()
@@ -191,12 +191,12 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                                         self.isWebViewError = true
                                     }
                                 }
-                                if self.baseURL == "" {
-                                    DispatchQueue.main.async {
-                                        self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
-                                        self.isWebViewError = true
-                                    }
-                                }
+                            }
+                        }
+                        if self.baseURL == "" {
+                            DispatchQueue.main.async {
+                                self.errorLabel.text = "Sorry, maintenance work in progress. Try again later."
+                                self.isWebViewError = true
                             }
                         }
                     default:

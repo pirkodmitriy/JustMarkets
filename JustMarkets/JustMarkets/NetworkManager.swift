@@ -18,7 +18,10 @@ class NetworkManager {
 
     
     func checkWebsiteIsAvailable(link: String, completion: @escaping (Bool) -> Void ) {
-        guard let url = URL(string: link) else { return }
+        guard let url = URL(string: link) else {
+            completion(false)
+            return
+        }
         var request = URLRequest(url: url)
         
         request.timeoutInterval = 20.0

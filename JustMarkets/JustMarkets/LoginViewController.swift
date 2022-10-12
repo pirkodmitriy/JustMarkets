@@ -13,7 +13,7 @@ import Network
 import FirebaseAnalytics
 import AppsFlyerLib
 
-class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
+class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, WKDownloadDelegate {
 
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var registerButton: UIButton!
@@ -30,9 +30,12 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
     private var campList = String()
     private var analyticsData: [AnyHashable: Any]?
     private var userAgent: String!
+    private var downloadedLabel = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        webView.navigationDelegate = self
+        webView.uiDelegate = self
         userAgent = webView.value(forKey: "userAgent") as! String
         AppsFlyerLib.shared().delegate = self
         self.webView.configuration.userContentController.add(self, name: "firebase")
@@ -438,6 +441,90 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
         // Show error view
         print(error)
     }
+//
+//    func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
+//        let documentDirectory = FileManager.default.urls(for: .documentDirectory,
+//                                                        in: .userDomainMask)[0]
+//        let fileName = documentDirectory.appendingPathComponent(suggestedFilename)
+//
+//        if let urlString = response.url?.absoluteString {
+//            if let fileUrl = URL(string: urlString) {
+//                URLSession.shared.downloadTask(with: fileUrl) { (tempFileUrl, response, error) in
+//                    if let imageTempFileUrl = tempFileUrl {
+//                        do {
+//                            // Write to file
+//                            let fileData = try Data(contentsOf: imageTempFileUrl)
+//                            try fileData.write(to: fileName)
+//                        } catch {
+//                            print("Error")
+//                        }
+//                    }
+//                }.resume()
+//            }
+//        }
+////        if let url = response.url {
+////            FileDownloader.loadFileAsync(url: url) { (path, error) in
+////                print("PDF File downloaded to : \(path!)")
+////                completionHandler(url)
+////            }
+////        }
+//    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
+        if navigationAction.shouldPerformDownload {
+            decisionHandler(.download, preferences)
+        } else {
+            decisionHandler(.allow, preferences)
+        }
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        if navigationResponse.canShowMIMEType {
+            decisionHandler(.allow)
+        } else {
+            decisionHandler(.download)
+        }
+    }
+    
+    func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
+        download.delegate = self// your `WKDownloadDelegate`
+    }
+        
+    func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
+        download.delegate = self// your `WKDownloadDelegate`
+    }
+    
+    func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory,
+                                                         in: .userDomainMask).first
+        let dataPath = documentDirectory?.appendingPathComponent(suggestedFilename)
+        
+        if #available(iOS 16.0, *) {
+            let fileExists = FileManager().fileExists(atPath: dataPath!.path())
+        } else {
+            let fileExists = FileManager().fileExists(atPath: dataPath!.path)
+            // Fallback on earlier versions
+        }
+        
+        let destination = dataPath?.appendingPathExtension("/" + suggestedFilename)
+        Downloader.load(url: response.url!, to: destination!)
+        completionHandler(dataPath)
+    }
+
+
+    func downloadDidFinish(_ download: WKDownload) {
+        print("downloaded")
+        downloadedLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 30))
+        downloadedLabel.center = self.webView.center
+        downloadedLabel.text = "Downloaded to app folder"
+        downloadedLabel.textColor = .red
+        downloadedLabel.textAlignment = .center
+        self.webView.addSubview(downloadedLabel)
+        let timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { timer in
+            self.downloadedLabel.removeFromSuperview()
+        }
+    }
+
 
     @IBAction func registerButtonAction(_ sender: Any) {
         if isWebViewError {

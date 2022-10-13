@@ -103,6 +103,47 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
         }
     }
     
+    private func fetchRemoteConfigDefaultsLoggedIn(openType: String) {
+        let debugSettings = RemoteConfigSettings()
+        RemoteConfig.remoteConfig().configSettings = debugSettings
+        RemoteConfig.remoteConfig().fetch(withExpirationDuration: 0) { status, error in
+            guard error == nil else {
+                print(error!)
+                return
+            }
+            RemoteConfig.remoteConfig().activate { status, error in
+                guard error == nil else {
+                    print(error!)
+                    return
+                }
+                if RemoteConfig.remoteConfig().configValue(forKey: "base_urls").stringValue! == "" {
+                    self.setupRemoteConfigDefaults()
+                }
+                self.checkBaseURL {
+                    print(HTTPCookieStorage.shared.cookies)
+                    DispatchQueue.main.async {
+                        if openType == "login" {
+                            if self.isWebViewError {
+                                self.errorLabel.isHidden = false
+                            } else {
+                                self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.loginEndpoint)
+                                self.errorLabel.isHidden = true
+                            }
+                            
+                        } else {
+                            if self.isWebViewError {
+                                self.errorLabel.isHidden = false
+                            } else {
+                                self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.registrationEndpoint)
+                                self.errorLabel.isHidden = true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     func checkBaseURL(completion: @escaping () -> Void) {
         if monitor.currentPath.status == .satisfied {
             // Internet Connected
@@ -115,6 +156,7 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                         for i in jsonArray {
                             if var links = i["DEV"] as? Array<Any> {
                                 links.reverse()
+                                self.currentOpenLink = 0
                                 for link in links {
                                     if links.count > currentOpenLink {
                                         let group = DispatchGroup()
@@ -145,6 +187,7 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                         for i in jsonArray {
                             if var links = i["STABLE"] as? Array<Any> {
                                 links.reverse()
+                                self.currentOpenLink = 0
                                 for link in links {
                                     if links.count > currentOpenLink {
                                         let group = DispatchGroup()
@@ -174,8 +217,9 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                     case "PROD":
                         for i in jsonArray {
                             print(jsonArray)
-                            if let links = i["PROD"] as? Array<Any> {
-                                //links.reverse()
+                            if var links = i["PROD"] as? Array<Any> {
+                                links.reverse()
+                                self.currentOpenLink = 0
                                 for link in links {
                                     if links.count > currentOpenLink {
                                         let group = DispatchGroup()
@@ -527,21 +571,11 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
 
 
     @IBAction func registerButtonAction(_ sender: Any) {
-        if isWebViewError {
-            errorLabel.isHidden = false
-        } else {
-            openWebView(endPoint: networkManager.languageEndpoint+networkManager.registrationEndpoint)
-            errorLabel.isHidden = true
-        }
+        fetchRemoteConfigDefaultsLoggedIn(openType: "register")
     }
     
     @IBAction func loginButtonACtion(_ sender: Any) {
-        if isWebViewError {
-            errorLabel.isHidden = false
-        } else {
-            openWebView(endPoint: networkManager.languageEndpoint+networkManager.loginEndpoint)
-            errorLabel.isHidden = true
-        }
+        fetchRemoteConfigDefaultsLoggedIn(openType: "login")
     }
     
 }

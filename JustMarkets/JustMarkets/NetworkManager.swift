@@ -9,6 +9,8 @@ import Foundation
 import Firebase
 import WebKit
 
+var checkWebsiteIsAvailableAnswer: Int!
+
 class NetworkManager {
     
     var languageEndpoint = ""
@@ -32,6 +34,9 @@ class NetworkManager {
                 completion(false)
             }
             if let httpResponse = response as? HTTPURLResponse {
+                if firebaseRemoteConfig == "DEV" {
+                    checkWebsiteIsAvailableAnswer = httpResponse.statusCode
+                }
                 print("statusCode: \(httpResponse.statusCode)")
                 // do your logic here
                 if httpResponse.statusCode == 200 {

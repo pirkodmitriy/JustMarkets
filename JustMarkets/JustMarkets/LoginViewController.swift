@@ -167,6 +167,11 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                                             } else {
                                                 self.currentOpenLink += 1
                                             }
+                                            DispatchQueue.main.async {
+                                                let alert = UIAlertController(title: "Status Code", message: "\(checkWebsiteIsAvailableAnswer!)", preferredStyle: UIAlertController.Style.alert)
+                                                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                                                self.present(alert, animated: true, completion: nil)
+                                            }
                                             group.leave()
                                         }
                                         group.wait()

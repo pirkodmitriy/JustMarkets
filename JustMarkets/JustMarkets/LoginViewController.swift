@@ -92,6 +92,11 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                 self.checkBaseURL {
                         print(HTTPCookieStorage.shared.cookies)
                     self.networkManager.checkLoginStatus(link: self.baseURL+self.networkManager.checkLoginStatusEndpoint, userAgent: self.userAgent, completion: { result in
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController(title: "Status Code", message: "\(checkWebsiteIsAvailableAnswer!)", preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                            self.present(alert, animated: true, completion: nil)
+                        }
                             if result {
                                 DispatchQueue.main.async {
                                     self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.loginEndpoint)
@@ -166,11 +171,6 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                                                 self.baseURL = link as! String
                                             } else {
                                                 self.currentOpenLink += 1
-                                            }
-                                            DispatchQueue.main.async {
-                                                let alert = UIAlertController(title: "Status Code", message: "\(checkWebsiteIsAvailableAnswer!)", preferredStyle: UIAlertController.Style.alert)
-                                                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                                                self.present(alert, animated: true, completion: nil)
                                             }
                                             group.leave()
                                         }

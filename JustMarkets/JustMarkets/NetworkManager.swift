@@ -34,9 +34,6 @@ class NetworkManager {
                 completion(false)
             }
             if let httpResponse = response as? HTTPURLResponse {
-                if firebaseRemoteConfig == "DEV" {
-                    checkWebsiteIsAvailableAnswer = httpResponse.statusCode
-                }
                 print("statusCode: \(httpResponse.statusCode)")
                 // do your logic here
                 if httpResponse.statusCode == 200 {
@@ -84,6 +81,9 @@ class NetworkManager {
                     completion(false)
                 }
                 if let httpResponse = response as? HTTPURLResponse {
+                    if firebaseRemoteConfig == "DEV" {
+                        checkWebsiteIsAvailableAnswer = httpResponse.statusCode
+                    }
                     print("statusCode: \(httpResponse.statusCode)")
                     // do your logic here
                     if httpResponse.statusCode == 200 {

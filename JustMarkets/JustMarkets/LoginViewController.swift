@@ -587,11 +587,14 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
 
     func downloadDidFinish(_ download: WKDownload) {
         print("downloaded")
-        downloadedLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 30))
-        downloadedLabel.center = self.webView.center
-        downloadedLabel.text = "Downloaded to app folder"
-        downloadedLabel.textColor = .red
+        downloadedLabel = UILabel(frame: CGRect(x: (UIScreen.main.bounds.width/2) - 100, y: UIScreen.main.bounds.height / 1.2, width: 200, height: 35))
+        //downloadedLabel.center = self.webView.center
+        downloadedLabel.text = "download success"
+        downloadedLabel.textColor = .white
+        downloadedLabel.backgroundColor = .darkGray
         downloadedLabel.textAlignment = .center
+        downloadedLabel.layer.masksToBounds = true
+        downloadedLabel.layer.cornerRadius = 5
         self.webView.addSubview(downloadedLabel)
         let timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { timer in
             self.downloadedLabel.removeFromSuperview()

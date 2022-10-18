@@ -550,9 +550,10 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
     }
     
     func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
+        
         let documentDirectory = FileManager.default.urls(for: .documentDirectory,
                                                          in: .userDomainMask).first
-        let dataPath = documentDirectory?.appendingPathComponent(suggestedFilename)
+        var dataPath = documentDirectory?.appendingPathComponent(suggestedFilename)
         
         if #available(iOS 16.0, *) {
             let fileExists = FileManager().fileExists(atPath: dataPath!.path())
@@ -561,11 +562,28 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
             // Fallback on earlier versions
         }
         
+        
         let destination = dataPath?.appendingPathExtension("/" + suggestedFilename)
+        
+        try? FileManager.default.removeItem(at: destination!)
+        
         Downloader.load(url: response.url!, to: destination!)
         completionHandler(dataPath)
     }
 
+    func clearTempFolder() {
+        let fileManager = FileManager.default
+        let tempFolderPath = NSTemporaryDirectory()
+
+        do {
+            let filePaths = try fileManager.contentsOfDirectory(atPath: tempFolderPath)
+            for filePath in filePaths {
+                try fileManager.removeItem(atPath: NSTemporaryDirectory() + filePath)
+            }
+        } catch let error as NSError {
+            print("Could not clear temp folder: \(error.debugDescription)")
+        }
+    }
 
     func downloadDidFinish(_ download: WKDownload) {
         print("downloaded")

@@ -78,6 +78,7 @@ class NetworkManager {
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {
                     print("\(error.localizedDescription)")
+                    checkWebsiteIsAvailableAnswer = 0
                     completion(false)
                 }
                 if let httpResponse = response as? HTTPURLResponse {

@@ -74,78 +74,84 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
     }
     
     private func fetchRemoteConfigDefaults() {
-        let debugSettings = RemoteConfigSettings()
-        RemoteConfig.remoteConfig().configSettings = debugSettings
-        RemoteConfig.remoteConfig().fetch(withExpirationDuration: 0) { status, error in
-            guard error == nil else {
-                print(error!)
-                return
-            }
-            RemoteConfig.remoteConfig().activate { status, error in
+            let debugSettings = RemoteConfigSettings()
+            RemoteConfig.remoteConfig().configSettings = debugSettings
+            RemoteConfig.remoteConfig().fetch(withExpirationDuration: 0) { status, error in
                 guard error == nil else {
                     print(error!)
                     return
                 }
-                if RemoteConfig.remoteConfig().configValue(forKey: "base_urls").stringValue! == "" {
-                    self.setupRemoteConfigDefaults()
-                }
-                self.checkBaseURL {
+                RemoteConfig.remoteConfig().activate { status, error in
+                    guard error == nil else {
+                        print(error!)
+                        return
+                    }
+                    if RemoteConfig.remoteConfig().configValue(forKey: "base_urls").stringValue! == "" {
+                        self.setupRemoteConfigDefaults()
+                    }
+                    self.checkBaseURL {
                         print(HTTPCookieStorage.shared.cookies)
-                    self.networkManager.checkLoginStatus(link: self.baseURL+self.networkManager.checkLoginStatusEndpoint, userAgent: self.userAgent, completion: { result in
-                        DispatchQueue.main.async {
-                            let alert = UIAlertController(title: "Status Code", message: "\(checkWebsiteIsAvailableAnswer!)", preferredStyle: UIAlertController.Style.alert)
-                            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                            self.present(alert, animated: true, completion: nil)
-                        }
+                        self.networkManager.checkLoginStatus(link: self.baseURL+self.networkManager.checkLoginStatusEndpoint, userAgent: self.userAgent, completion: { result in
+                            DispatchQueue.main.async {
+                                let alert = UIAlertController(title: "Status Code", message: "\(checkWebsiteIsAvailableAnswer!)", preferredStyle: UIAlertController.Style.alert)
+                                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                                self.present(alert, animated: true, completion: nil)
+                            }
                             if result {
                                 DispatchQueue.main.async {
                                     self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.loginEndpoint)
                                 }
                             }
                         })
+                    }
                 }
             }
-        }
     }
     
     private func fetchRemoteConfigDefaultsLoggedIn(openType: String) {
-        let debugSettings = RemoteConfigSettings()
-        RemoteConfig.remoteConfig().configSettings = debugSettings
-        RemoteConfig.remoteConfig().fetch(withExpirationDuration: 0) { status, error in
-            guard error == nil else {
-                print(error!)
-                return
-            }
-            RemoteConfig.remoteConfig().activate { status, error in
+        if monitor.currentPath.status == .satisfied {
+            let debugSettings = RemoteConfigSettings()
+            RemoteConfig.remoteConfig().configSettings = debugSettings
+            RemoteConfig.remoteConfig().fetch(withExpirationDuration: 0) { status, error in
                 guard error == nil else {
                     print(error!)
                     return
                 }
-                if RemoteConfig.remoteConfig().configValue(forKey: "base_urls").stringValue! == "" {
-                    self.setupRemoteConfigDefaults()
-                }
-                self.checkBaseURL {
-                    print(HTTPCookieStorage.shared.cookies)
-                    DispatchQueue.main.async {
-                        if openType == "login" {
-                            if self.isWebViewError {
-                                self.errorLabel.isHidden = false
+                RemoteConfig.remoteConfig().activate { status, error in
+                    guard error == nil else {
+                        print(error!)
+                        return
+                    }
+                    if RemoteConfig.remoteConfig().configValue(forKey: "base_urls").stringValue! == "" {
+                        self.setupRemoteConfigDefaults()
+                    }
+                    self.checkBaseURL {
+                        print(HTTPCookieStorage.shared.cookies)
+                        DispatchQueue.main.async {
+                            if openType == "login" {
+                                if self.isWebViewError {
+                                    self.errorLabel.isHidden = false
+                                } else {
+                                    self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.loginEndpoint)
+                                    self.errorLabel.isHidden = true
+                                }
+                                
                             } else {
-                                self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.loginEndpoint)
-                                self.errorLabel.isHidden = true
-                            }
-                            
-                        } else {
-                            if self.isWebViewError {
-                                self.errorLabel.isHidden = false
-                            } else {
-                                self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.registrationEndpoint)
-                                self.errorLabel.isHidden = true
+                                if self.isWebViewError {
+                                    self.errorLabel.isHidden = false
+                                } else {
+                                    self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.registrationEndpoint)
+                                    self.errorLabel.isHidden = true
+                                }
                             }
                         }
                     }
                 }
             }
+        } else {
+            self.errorLabel.text = "No internet connection. Connect and try again"
+            self.isWebViewError = true
+            self.errorLabel.isHidden = false
         }
     }
     

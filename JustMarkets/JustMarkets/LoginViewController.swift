@@ -93,7 +93,7 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                         print(HTTPCookieStorage.shared.cookies)
                         self.networkManager.checkLoginStatus(link: self.baseURL+self.networkManager.checkLoginStatusEndpoint, userAgent: self.userAgent, completion: { result in
                             DispatchQueue.main.async {
-                                let alert = UIAlertController(title: "Status Code", message: "\(checkWebsiteIsAvailableAnswer!)", preferredStyle: UIAlertController.Style.alert)
+                                let alert = UIAlertController(title: "Status Code", message: "\(checkWebsiteIsAvailableAnswer ?? 0)", preferredStyle: UIAlertController.Style.alert)
                                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
                                 self.present(alert, animated: true, completion: nil)
                             }

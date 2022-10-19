@@ -69,9 +69,10 @@ class NetworkManager {
             DispatchQueue.main.async {
                 request.setValue("\(userAgent)", forHTTPHeaderField: "User-Agent")
             }
-            let dataString = """
+            var dataString = """
         [{"operationName":"RefreshTokens","variables":{},"extensions":{},"query":"mutation RefreshTokens {\n  refreshTokens {\n    expiry\n  }\n}"}]
         """
+            dataString = dataString.replacingOccurrences(of: "\"", with: "", options: NSString.CompareOptions.literal, range:nil)
             let body = Data(dataString.utf8)
             request.httpBody = body
             

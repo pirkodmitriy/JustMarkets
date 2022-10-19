@@ -306,6 +306,7 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
             self.webView.isHidden = true
         } else if command == "changeLang" {
             guard let value = body["value"] as? String else { return }
+            UserDefaults.standard.set(value, forKey: "language")
             setupLanguage(language: value)
         } else if command == "copyToClipboard" {
             guard let value = body["value"] as? String else { return }
@@ -334,7 +335,7 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
     }
     
     private func setupLanguage(language: String) {
-        var locale = String(Locale.preferredLanguages[0].prefix(2))
+        var locale = UserDefaults.standard.string(forKey: "language") ?? String(Locale.preferredLanguages[0].prefix(2))
         if language != "" {
             locale = language
         }

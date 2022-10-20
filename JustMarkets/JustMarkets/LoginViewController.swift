@@ -42,7 +42,8 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
         self.setupLanguage(language: "")
         self.webView.isHidden = true
         self.errorLabel.isHidden = true
-        self.logoAnimation()
+        self.loginButton.isHidden = true
+        self.registerButton.isHidden = true
         self.getBaseURL()
     }
     
@@ -100,6 +101,10 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                             if result {
                                 DispatchQueue.main.async {
                                     self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.loginEndpoint)
+                                }
+                            } else {
+                                DispatchQueue.main.async {
+                                    self.logoAnimation()
                                 }
                             }
                         })
@@ -304,6 +309,11 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
 
         if command == "logout" {
             self.webView.isHidden = true
+            let cookieJar = HTTPCookieStorage.shared
+            for cookie in cookieJar.cookies! {
+                cookieJar.deleteCookie(cookie)
+            }
+            self.logoAnimation()
         } else if command == "changeLang" {
             guard let value = body["value"] as? String else { return }
             UserDefaults.standard.set(value, forKey: "language")
@@ -422,6 +432,8 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
         self.logoImageView.transform = CGAffineTransform(translationX: 0, y: 0)
         self.registerButton.transform = CGAffineTransform(translationX: 0, y: 300)
         self.loginButton.transform = CGAffineTransform(translationX: 0, y: 200)
+        self.loginButton.isHidden = false
+        self.registerButton.isHidden = false
         //move items to end positions
         UIView.animate(withDuration: 2.0) {
             self.logoImageView.transform = CGAffineTransform(translationX: 0, y: -100)

@@ -16,6 +16,7 @@ class NetworkManager {
     var languageEndpoint = ""
     var registrationEndpoint = "registration/trader"
     var loginEndpoint = "login"
+    var alreadyLoggedInEndpoint = "spa/account-operations/accounts"
     var checkLoginStatusEndpoint = "graphql"
 
     

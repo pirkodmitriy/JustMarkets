@@ -13,7 +13,7 @@ import Network
 import FirebaseAnalytics
 import AppsFlyerLib
 
-class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, WKDownloadDelegate {
+class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, WKDownloadDelegate, UIScrollViewDelegate {
 
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var registerButton: UIButton!
@@ -39,6 +39,7 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
         userAgent = webView.value(forKey: "userAgent") as! String
         AppsFlyerLib.shared().delegate = self
         self.webView.configuration.userContentController.add(self, name: "firebase")
+        self.webView.scrollView.delegate = self
         self.setupLanguage(language: "")
         self.webView.isHidden = true
         self.errorLabel.isHidden = true
@@ -61,6 +62,10 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
         self.monitor.start(queue: queue)
     }
     
+    func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
+        scrollView.pinchGestureRecognizer?.isEnabled = false
+    }
+    
     func getBaseURL() {
         setupRemoteConfigDefaults()
         fetchRemoteConfigDefaults()
@@ -68,8 +73,8 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
     
     private func setupRemoteConfigDefaults() {
         let defaultsValues = [
-            "base_urls" : "[{\"DEV\":[\"https://justmarkets.com/\",\"https://iosjmdev9.justforex.net/\",\"https://justmarkets.com/\"],\"STABLE\":[\"https://ios.justforex.net/\"],\"PROD\":[\"https://ios.justforex.net/\"]}]" as NSObject,
-            "forExternalOpens": "[{\"justmarkets.com\",\"justmarkets.biz\",\"justmarkets.asia\"}]" as NSObject
+            "base_urls" : "[{\"DEV\":[\"https://ios.jmarkets.net/\"]" as NSObject,
+            "forExternalOpens": "[{\"justmarkets.com\",\"justmarkets.biz\",\"justmarkets.asia\",\"justmarkets-idn.com\"}]" as NSObject
         ]
         RemoteConfig.remoteConfig().setDefaults(defaultsValues)
     }
@@ -100,7 +105,7 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                             }
                             if result {
                                 DispatchQueue.main.async {
-                                    self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.loginEndpoint)
+                                    self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.alreadyLoggedInEndpoint)
                                 }
                             } else {
                                 DispatchQueue.main.async {
@@ -473,7 +478,16 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-                    if webView.url!.absoluteString.contains("accounts") {
+        var refresh_token = ""
+        let cookies = HTTPCookieStorage.shared.cookies!
+        for cookie in cookies {
+            if let name = cookie.value(forKey: "name") {
+                if name as! String == "refresh_token" {
+                    refresh_token = cookie.value(forKey: "value") as! String
+                }
+            }
+        }
+                    if webView.url!.absoluteString.contains("accounts") && refresh_token == "" {
                         HTTPCookieStorage.shared.removeCookies(since: .distantPast)
                         self.webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
                             for cookie in cookies {
@@ -490,7 +504,6 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                             }
                         }
                     }
-        
     }
     
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {

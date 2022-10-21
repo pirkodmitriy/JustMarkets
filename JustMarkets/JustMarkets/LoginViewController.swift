@@ -98,11 +98,11 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                     self.checkBaseURL {
                         print(HTTPCookieStorage.shared.cookies)
                         self.networkManager.checkLoginStatus(link: self.baseURL+self.networkManager.checkLoginStatusEndpoint, userAgent: self.userAgent, completion: { result in
-                            DispatchQueue.main.async {
-                                let alert = UIAlertController(title: "Status Code", message: "\(checkWebsiteIsAvailableAnswer ?? 0)", preferredStyle: UIAlertController.Style.alert)
-                                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                                self.present(alert, animated: true, completion: nil)
-                            }
+//                            DispatchQueue.main.async {
+//                                let alert = UIAlertController(title: "Status Code", message: "\(checkWebsiteIsAvailableAnswer ?? 0)", preferredStyle: UIAlertController.Style.alert)
+//                                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+//                                self.present(alert, animated: true, completion: nil)
+//                            }
                             if result {
                                 DispatchQueue.main.async {
                                     self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.alreadyLoggedInEndpoint)
@@ -595,20 +595,6 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
         
         Downloader.load(url: response.url!, to: destination!)
         completionHandler(dataPath)
-    }
-
-    func clearTempFolder() {
-        let fileManager = FileManager.default
-        let tempFolderPath = NSTemporaryDirectory()
-
-        do {
-            let filePaths = try fileManager.contentsOfDirectory(atPath: tempFolderPath)
-            for filePath in filePaths {
-                try fileManager.removeItem(atPath: NSTemporaryDirectory() + filePath)
-            }
-        } catch let error as NSError {
-            print("Could not clear temp folder: \(error.debugDescription)")
-        }
     }
 
     func downloadDidFinish(_ download: WKDownload) {

@@ -61,42 +61,43 @@ class NetworkManager {
             }
         }
         
-        if refresh_token != "" {
-            var request = URLRequest(url: url)
-            request.timeoutInterval = 10.0
-            request.httpMethod = "POST"
-            request.setValue("content-type", forHTTPHeaderField: "application/json")
-            request.setValue("Cookie", forHTTPHeaderField: "refresh_token=\(refresh_token)")
-            DispatchQueue.main.async {
-                request.setValue("\(userAgent)", forHTTPHeaderField: "User-Agent")
-            }
-            var dataString = """
-        [{"operationName":"RefreshTokens","variables":{},"extensions":{},"query":"mutation RefreshTokens {\n  refreshTokens {\n    expiry\n  }\n}"}]
-        """
-            dataString = dataString.replacingOccurrences(of: "\"", with: "", options: NSString.CompareOptions.literal, range:nil)
-            let body = Data(dataString.utf8)
-            request.httpBody = body
-            
-            let task = URLSession.shared.dataTask(with: request) { data, response, error in
-                if let error = error {
-                    print("\(error.localizedDescription)")
-                    checkWebsiteIsAvailableAnswer = 0
-                    completion(false)
-                }
-                if let httpResponse = response as? HTTPURLResponse {
-                    if firebaseRemoteConfig == "DEV" {
-                        checkWebsiteIsAvailableAnswer = httpResponse.statusCode
-                    }
-                    print("statusCode: \(httpResponse.statusCode)")
-                    // do your logic here
-                    if httpResponse.statusCode == 200 {
-                        completion(true)
-                    } else {
-                        completion(false)
-                    }
-                }
-            }
-            task.resume()
+        if refresh_token != "" && refresh_token.count > 9 {
+            completion(true)
+//            var request = URLRequest(url: url)
+//            request.timeoutInterval = 10.0
+//            request.httpMethod = "POST"
+//            request.setValue("Content-Type", forHTTPHeaderField: "application/json")
+//            request.setValue("Cookie", forHTTPHeaderField: "refresh_token=\(refresh_token)")
+//            DispatchQueue.main.async {
+//                request.setValue("\(userAgent)", forHTTPHeaderField: "User-Agent")
+//            }
+//            var dataString = """
+//        [{"operationName":"RefreshTokens","variables":{},"extensions":{},"query":"mutation RefreshTokens {\n  refreshTokens {\n    expiry\n  }\n}"}]
+//        """
+//
+//            let jsonData = Data(dataString.utf8)
+//            request.httpBody = jsonData
+//
+//            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+//                if let error = error {
+//                    print("\(error.localizedDescription)")
+//                    checkWebsiteIsAvailableAnswer = 0
+//                    completion(false)
+//                }
+//                if let httpResponse = response as? HTTPURLResponse {
+//                    if firebaseRemoteConfig == "DEV" {
+//                        checkWebsiteIsAvailableAnswer = httpResponse.statusCode
+//                    }
+//                    print("statusCode: \(httpResponse.statusCode)")
+//                    // do your logic here
+//                    if httpResponse.statusCode == 200 {
+//                        completion(true)
+//                    } else {
+//                        completion(false)
+//                    }
+//                }
+//            }
+//            task.resume()
         } else {
             completion(false)
         }

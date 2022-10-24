@@ -478,16 +478,16 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        var refresh_token = ""
-        let cookies = HTTPCookieStorage.shared.cookies!
-        for cookie in cookies {
-            if let name = cookie.value(forKey: "name") {
-                if name as! String == "refresh_token" {
-                    refresh_token = cookie.value(forKey: "value") as! String
-                }
-            }
-        }
-                    if webView.url!.absoluteString.contains("accounts") && refresh_token == "" {
+//        var refresh_token = ""
+//        let cookies = HTTPCookieStorage.shared.cookies!
+//        for cookie in cookies {
+//            if let name = cookie.value(forKey: "name") {
+//                if name as! String == "refresh_token" {
+//                    refresh_token = cookie.value(forKey: "value") as! String
+//                }
+//            }
+//        }
+                    //if webView.url!.absoluteString.contains("accounts") && refresh_token == "" {
                         HTTPCookieStorage.shared.removeCookies(since: .distantPast)
                         self.webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
                             for cookie in cookies {
@@ -498,12 +498,12 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                                 cookieProperties[.path] = cookie.path
                                 cookieProperties[.version] = cookie.version
                                 cookieProperties[.expires] = Date().addingTimeInterval(31536000)
-            
+
                                 let newCookie = HTTPCookie(properties: cookieProperties)
                                 HTTPCookieStorage.shared.setCookie(newCookie!)
                             }
                         }
-                    }
+                    //}
     }
     
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {

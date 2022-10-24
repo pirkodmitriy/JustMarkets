@@ -446,36 +446,65 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
             self.loginButton.transform = CGAffineTransform(translationX: 0, y: 0)
         }
     }
-    
+
     // OPEN EXTERNAL URSL IN BROWSER
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-            if let externals = RemoteConfig.remoteConfig().configValue(forKey: "forExternalOpens").jsonValue as? [String] {
-                for i in externals {
-                    if #available(iOS 16.0, *) {
-                        if let domain = webView.url?.host() {
-                            if domain == i {
-                                UIApplication.shared.open(webView.url!)
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                    self.webView.goBack()
-                                }
-                                break
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        if let externals = RemoteConfig.remoteConfig().configValue(forKey: "forExternalOpens").jsonValue as? [String] {
+            for i in externals {
+                if #available(iOS 16.0, *) {
+                    if let domain = webView.url?.host() {
+                        if domain == i {
+                            UIApplication.shared.open(webView.url!)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                                if self.webView.canGoBack {
+//                                    self.webView.goBack()
+//                                } else {
+                                    if let prevURL = self.webView.backForwardList.backItem {
+                                        self.webView.go(to: prevURL)
+                                    }
+                                //}
                             }
+                            break
                         }
-                    } else {
-                        // Fallback on earlier versions
-                        if let domain = webView.url?.host  {
-                            if domain == i {
-                                UIApplication.shared.open(webView.url!)
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                    self.webView.goBack()
-                                }
-                                break
+                    }
+                } else {
+                    // Fallback on earlier versions
+                    if let domain = webView.url?.host  {
+                        if domain == i {
+                            UIApplication.shared.open(webView.url!)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                                if self.webView.canGoBack {
+//                                    self.webView.goBack()
+//                                } else {
+                                    if let prevURL = self.webView.backForwardList.backItem {
+                                        self.webView.go(to: prevURL)
+                                    }
+                                //}
                             }
+                            break
                         }
                     }
                 }
             }
+        }
     }
+    
+    func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: ((WKNavigationActionPolicy) -> Void)) {
+            //print("webView:\(webView) decidePolicyForNavigationAction:\(navigationAction) decisionHandler:\(decisionHandler)")
+
+        let app = UIApplication.shared
+        let url = navigationAction.request.url
+            let myScheme: NSString = "https"
+            //if (url!.scheme == myScheme) && app.canOpenURL(url!) {
+                print("redirect detected..")
+                // intercepting redirect, do whatever you want
+                app.openURL(url!) // open the original url
+                decisionHandler(.cancel)
+                return
+            //}
+
+        decisionHandler(.allow)
+        }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
 //        var refresh_token = ""
@@ -488,22 +517,46 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
 //            }
 //        }
                     //if webView.url!.absoluteString.contains("accounts") && refresh_token == "" {
-                        HTTPCookieStorage.shared.removeCookies(since: .distantPast)
+                        //HTTPCookieStorage.shared.removeCookies(since: .distantPast)
                         self.webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+                            var cookieDict = [String : AnyObject]()
                             for cookie in cookies {
-                                var cookieProperties = [HTTPCookiePropertyKey: Any]()
-                                cookieProperties[.name] = cookie.name
-                                cookieProperties[.value] = cookie.value
-                                cookieProperties[.domain] = cookie.domain
-                                cookieProperties[.path] = cookie.path
-                                cookieProperties[.version] = cookie.version
-                                cookieProperties[.expires] = Date().addingTimeInterval(31536000)
-
-                                let newCookie = HTTPCookie(properties: cookieProperties)
-                                HTTPCookieStorage.shared.setCookie(newCookie!)
+                                
+                                if cookie.name == "refresh_token" || cookie.name == "_fx_frontend_session" {
+                                    if cookie.value.count >= 9 {
+                                        cookieDict[cookie.name] = cookie.properties as AnyObject?
+                                        
+//                                        var cookieProperties = [HTTPCookiePropertyKey: Any]()
+//                                        cookieProperties[.version] = cookie.version
+//                                        cookieProperties[.name] = cookie.name
+//                                        cookieProperties[.value] = cookie.value
+//                                        cookieProperties[.expires] = cookie.expiresDate//Date().addingTimeInterval(31536000)
+//                                        cookieProperties[.sameSitePolicy] = cookie.sameSitePolicy
+//                                        cookieProperties[.path] = cookie.sameSitePolicy
+//                                        cookieProperties[.domain] = cookie.domain
+//                                        cookieProperties[.path] = cookie.path
+//                                        cookieProperties[.secure] = cookie.isSecure
+//                                        cookieDict.append(HTTPCookie(properties: cookieProperties)!)
+//                                        HTTPCookieStorage().setCookie(HTTPCookie(properties: cookieProperties)!)
+                                    }
+                                } else {
+                                    cookieDict[cookie.name] = cookie.properties as AnyObject?
+//                                    var cookieProperties = [HTTPCookiePropertyKey: Any]()
+//                                    cookieProperties[.version] = cookie.version
+//                                    cookieProperties[.name] = cookie.name
+//                                    cookieProperties[.value] = cookie.value
+//                                    cookieProperties[.expires] = cookie.expiresDate//Date().addingTimeInterval(31536000)
+//                                    cookieProperties[.sameSitePolicy] = cookie.sameSitePolicy
+//                                    cookieProperties[.path] = cookie.sameSitePolicy
+//                                    cookieProperties[.domain] = cookie.domain
+//                                    cookieProperties[.path] = cookie.path
+//                                    cookieProperties[.secure] = cookie.isSecure
+//                                    cookieDict.append(HTTPCookie(properties: cookieProperties)!)
+                                    //HTTPCookieStorage().setCookie(HTTPCookie(properties: cookieProperties)!)
+                                }
                             }
+                            UserDefaults.standard.set(cookieDict, forKey: "cookies")
                         }
-                    //}
     }
     
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {

@@ -16,7 +16,7 @@ class NetworkManager {
     var languageEndpoint = ""
     var registrationEndpoint = "registration/trader"
     var loginEndpoint = "login"
-    var alreadyLoggedInEndpoint = "spa/account-operations/accounts"
+    var alreadyLoggedInEndpoint = "login"//"spa/account-operations/accounts"
     var checkLoginStatusEndpoint = "graphql"
 
     
@@ -48,9 +48,18 @@ class NetworkManager {
     }
     
     func checkLoginStatus(link: String, userAgent: String, completion: @escaping(Bool) -> Void) {
-        
         guard var url = URL(string: link) else { return }
         
+        let cookiesStorage = HTTPCookieStorage.shared
+        let userDefaults = UserDefaults.standard
+
+        if let cookieDictionary = userDefaults.dictionary(forKey: "cookies") {
+            for (_, cookieProperties) in cookieDictionary {
+                if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any] ) {
+                    cookiesStorage.setCookie(cookie)
+                }
+            }
+        }
         var refresh_token = ""
         let cookies = HTTPCookieStorage.shared.cookies!
         for cookie in cookies {

@@ -47,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //MARK: APPSFLYER
         AppsFlyerLib.shared().isDebug = true
         AppsFlyerLib.shared().appsFlyerDevKey = "GmKygYSXY6qDV59DgqMShP"
-        AppsFlyerLib.shared().appleAppID = "id1489327144"
+        AppsFlyerLib.shared().appleAppID = "1489327144"
         NotificationCenter.default.addObserver(self, selector: NSSelectorFromString("sendLaunch"), name: UIApplication.didBecomeActiveNotification, object: nil)
         AppsFlyerLib.shared().waitForATTUserAuthorization(timeoutInterval: 30)
         

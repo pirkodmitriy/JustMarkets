@@ -12,6 +12,7 @@ import SystemConfiguration
 import Network
 import FirebaseAnalytics
 import AppsFlyerLib
+import AdSupport
 
 class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, WKDownloadDelegate, UIScrollViewDelegate {
 
@@ -291,6 +292,15 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
         completion()
     }
     
+//    func addCustomCookiesToCookieStorage() {
+//        var cookies: [HTTPCookie] = []
+//
+//
+//        for i in cookies{
+//            HTTPCookieStorage.shared.cookies?.append(i)//.append(i)
+//        }
+//    }
+    
     private func openWebView(endPoint: String) {
         if let url = URL(string: baseURL + endPoint) {
             print(url)
@@ -298,7 +308,35 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
             self.webView.navigationDelegate = self
             self.webView.uiDelegate = self
             self.webView.allowsBackForwardNavigationGestures = true
-            let cookies = HTTPCookieStorage.shared.cookies ?? []
+            var cookies = HTTPCookieStorage.shared.cookies ?? []
+            
+            let AppsFlyerUid = HTTPCookie(properties: [
+                .domain: "\(self.baseURL)",
+                .path: "/",
+                .name: "AppsFlyerUid",
+                .value: "\(AppsFlyerLib.shared().getAppsFlyerUID())",
+                .secure: "TRUE",
+                .expires: NSDate(timeIntervalSinceNow: 31556926)
+            ])!
+            cookies.append(AppsFlyerUid)
+            let AdvertisingId = HTTPCookie(properties: [
+                .domain: "\(self.baseURL)",
+                .path: "/",
+                .name: "AdvertisingId",
+                .value: "\(ASIdentifierManager.shared().advertisingIdentifier.uuidString)",
+                .secure: "TRUE",
+                .expires: NSDate(timeIntervalSinceNow: 31556926)
+            ])!
+            cookies.append(AdvertisingId)
+            let OS = HTTPCookie(properties: [
+                .domain: "\(self.baseURL)",
+                .path: "/",
+                .name: "OS",
+                .value: "iOS",
+                .secure: "TRUE",
+                .expires: NSDate(timeIntervalSinceNow: 31556926)
+            ])!
+            
             for cookie in cookies {
                 webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
             }

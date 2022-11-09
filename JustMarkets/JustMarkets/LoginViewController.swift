@@ -104,6 +104,20 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
 //                                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
 //                                self.present(alert, animated: true, completion: nil)
 //                            }
+                            //
+                            if firebaseRemoteConfig == "DEV" && isTokenDebug {
+                                let cookies = HTTPCookieStorage.shared.cookies!
+                                for cookie in cookies {
+                                    if cookie.name == "refresh_token" || cookie.name == "_fx_frontend_session" {
+                                        DispatchQueue.main.async {
+                                            let alert = UIAlertController(title: "\(cookie.name)", message: "\(cookie.domain) : \(cookie.value)", preferredStyle: UIAlertController.Style.alert)
+                                            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                                            self.present(alert, animated: true, completion: nil)
+                                        }
+                                    }
+                                }
+                            }
+                            //
                             if result {
                                 DispatchQueue.main.async {
                                     self.openWebView(endPoint: self.networkManager.languageEndpoint+self.networkManager.alreadyLoggedInEndpoint)
@@ -552,6 +566,13 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
                     if cookie.name == "refresh_token" || cookie.name == "_fx_frontend_session" {
                         if cookie.value.count >= 9 {
                             cookieDict[cookie.name] = cookie.properties as AnyObject?
+                            if firebaseRemoteConfig == "DEV" && isTokenDebug {
+                                DispatchQueue.main.async {
+                                    let alert = UIAlertController(title: "\(cookie.name)", message: "\(cookie.domain) : \(cookie.value)", preferredStyle: UIAlertController.Style.alert)
+                                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                                    self.present(alert, animated: true, completion: nil)
+                                }
+                            }
                         }
                     } else {
                         cookieDict[cookie.name] = cookie.properties as AnyObject?

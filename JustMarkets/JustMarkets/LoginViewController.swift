@@ -545,56 +545,21 @@ class LoginViewController: UIViewController, WKNavigationDelegate, WKUIDelegate,
         }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-//        var refresh_token = ""
-//        let cookies = HTTPCookieStorage.shared.cookies!
-//        for cookie in cookies {
-//            if let name = cookie.value(forKey: "name") {
-//                if name as! String == "refresh_token" {
-//                    refresh_token = cookie.value(forKey: "value") as! String
-//                }
-//            }
-//        }
-                    //if webView.url!.absoluteString.contains("accounts") && refresh_token == "" {
-                        //HTTPCookieStorage.shared.removeCookies(since: .distantPast)
-                        self.webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
-                            var cookieDict = [String : AnyObject]()
-                            for cookie in cookies {
-                                
-                                if cookie.name == "refresh_token" || cookie.name == "_fx_frontend_session" {
-                                    if cookie.value.count >= 9 {
-                                        cookieDict[cookie.name] = cookie.properties as AnyObject?
-                                        
-//                                        var cookieProperties = [HTTPCookiePropertyKey: Any]()
-//                                        cookieProperties[.version] = cookie.version
-//                                        cookieProperties[.name] = cookie.name
-//                                        cookieProperties[.value] = cookie.value
-//                                        cookieProperties[.expires] = cookie.expiresDate//Date().addingTimeInterval(31536000)
-//                                        cookieProperties[.sameSitePolicy] = cookie.sameSitePolicy
-//                                        cookieProperties[.path] = cookie.sameSitePolicy
-//                                        cookieProperties[.domain] = cookie.domain
-//                                        cookieProperties[.path] = cookie.path
-//                                        cookieProperties[.secure] = cookie.isSecure
-//                                        cookieDict.append(HTTPCookie(properties: cookieProperties)!)
-//                                        HTTPCookieStorage().setCookie(HTTPCookie(properties: cookieProperties)!)
-                                    }
-                                } else {
-                                    cookieDict[cookie.name] = cookie.properties as AnyObject?
-//                                    var cookieProperties = [HTTPCookiePropertyKey: Any]()
-//                                    cookieProperties[.version] = cookie.version
-//                                    cookieProperties[.name] = cookie.name
-//                                    cookieProperties[.value] = cookie.value
-//                                    cookieProperties[.expires] = cookie.expiresDate//Date().addingTimeInterval(31536000)
-//                                    cookieProperties[.sameSitePolicy] = cookie.sameSitePolicy
-//                                    cookieProperties[.path] = cookie.sameSitePolicy
-//                                    cookieProperties[.domain] = cookie.domain
-//                                    cookieProperties[.path] = cookie.path
-//                                    cookieProperties[.secure] = cookie.isSecure
-//                                    cookieDict.append(HTTPCookie(properties: cookieProperties)!)
-                                    //HTTPCookieStorage().setCookie(HTTPCookie(properties: cookieProperties)!)
-                                }
-                            }
-                            UserDefaults.standard.set(cookieDict, forKey: "cookies")
+        if webView.url?.host == baseURL {
+            self.webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+                var cookieDict = [String : AnyObject]()
+                for cookie in cookies {
+                    if cookie.name == "refresh_token" || cookie.name == "_fx_frontend_session" {
+                        if cookie.value.count >= 9 {
+                            cookieDict[cookie.name] = cookie.properties as AnyObject?
                         }
+                    } else {
+                        cookieDict[cookie.name] = cookie.properties as AnyObject?
+                    }
+                }
+                UserDefaults.standard.set(cookieDict, forKey: "cookies")
+            }
+        }
     }
     
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {

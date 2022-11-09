@@ -6,8 +6,8 @@
 //
 
 // FIREBASE REMOTE CONFIG INDICATOR: SET "DEV", "STABLE" or "PROD"
-let firebaseRemoteConfig = "DEV"
-let isTokenDebug = true
+let firebaseRemoteConfig = "PROD"
+//let isTokenDebug = true
 
 import UIKit
 import CoreData
